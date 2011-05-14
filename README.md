@@ -1,23 +1,23 @@
-django-ajax-uploader provides a useful class you can use to easily implement ajax uploads.
+`django-ajax-uploader` provides a useful class you can use to easily implement ajax uploads.
 
-It uses valum's great uploader: http://valums.com/ajax-upload/ ,
-and draws heavy inspiration and some code from https://github.com/alexkuhl/file-uploader
+It uses valum's great uploader: http://valums.com/ajax-upload/,and draws heavy inspiration and some code from https://github.com/alexkuhl/file-uploader
 
 In short, it implements a callable class, `AjaxFileUploader` that you can subclass use to handle uploads.  By default, `AjaxFileUploader` assumes you want to upload to Amazon's S3, but can be subclassed to change this behavior if desired.  Pull requests welcome! 
 
 Usage
 =====
-1. Install django-ajax-uploader. 
---------------------------------
+Step 1. Install django-ajax-uploader. 
+-------------------------------------
 Right now, you can either:
 * Download and install, or
 * `pip install -e git://github.com/GoodCloud/django-ajax-uploader.git#egg=ajaxuploader`  it from here. If there's demand, I'll look into pypi. 
 
-2. Include it in your app's views and urls.
--------------------------------------------
+Step 2. Include it in your app's views and urls.
+------------------------------------------------
 You'll need to make sure to meet the csrf requirements to still make valum's uploader work.  Code similar to the following should work:
 
 views.py
+
 	from ajaxuploader.views import AjaxFileUploader
 	from django.middleware.csrf import get_token
 	@render_to("import.html")
@@ -32,8 +32,8 @@ urls.py
 
 	url( r'ajax-upload$',                     views.import_uploader,             name="my_ajax_upload" ),
 
-3. Set up your template.
-------------------------
+Step 3. Set up your template.
+-----------------------------
 This sample is included in the templates directory, but at the minimum, you need:
 
 	<!doctype html> 
@@ -73,9 +73,9 @@ This sample is included in the templates directory, but at the minimum, you need
 	</body>
 	</html>
 
-4. Subclass and override if needed.
------------------------------------
- If desired, subclass AjaxFileUploader, and override functions and constants.  AjaxFileUploader has a fair bit of configurability.  The example below shows all of the most common functions and constants redefined.
+Step 4. Subclass and override if needed.
+----------------------------------------
+That's all you need to get rolling. However, it's likely you actually want to do something with those files the user just uploaded. For that, you can subclass AjaxFileUploader, and override functions and constants.  AjaxFileUploader has a fair bit of configurability.  The example below shows all of the most common functions and constants redefined.
 
 	class MyAjaxFileUploader(AjaxFileUploader):
 		NUM_PARALLEL_PROCESSES = 48   		# Your servers are way better than mine
@@ -89,7 +89,7 @@ This sample is included in the templates directory, but at the minimum, you need
 	    def _upload_complete(self, request, filename):
 	        print "Save the fact that %s's upload was completed to the database, and do important things!"  % filename
 
-my_uploader = MyAjaxFileUploader()
+	my_uploader = MyAjaxFileUploader()
 
 
 Advanced Usage / Not uploading to S3
@@ -107,4 +107,6 @@ Credits
 This code is such a trivial layer on top of [valum's uploader](http://valums.com/ajax-upload/), [boto](https://github.com/boto/boto), and [alex's ideas](http://kuhlit.blogspot.com/2011/04/ajax-file-uploads-and-csrf-in-django-13.html) it's silly.  However, I didn't find any implementations that *just worked*, so hopefully it's useful to someone else.  I also drew from these sources:
 
 * http://www.topfstedt.de/weblog/?p=558
-* and http://www.elastician.com/2010/12/s3-multipart-upload-in-boto.html
+* http://www.elastician.com/2010/12/s3-multipart-upload-in-boto.html
+
+Many thanks to all for writing such helpful and readable code!
