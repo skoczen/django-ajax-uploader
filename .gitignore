@@ -1,0 +1,6 @@
+.DS_Store
+*.pyc
+*.pyc
+*.pyo
+*.swp
+pip-log.txt
