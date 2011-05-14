@@ -1,8 +1,8 @@
 `django-ajax-uploader` provides a useful class you can use to easily implement ajax uploads.
 
-It uses valum's great uploader: http://valums.com/ajax-upload/,and draws heavy inspiration and some code from https://github.com/alexkuhl/file-uploader
+It uses valum's great uploader: https://github.com/valums/file-uploader,and draws heavy inspiration and some code from https://github.com/alexkuhl/file-uploader
 
-In short, it implements a callable class, `AjaxFileUploader` that you can subclass use to handle uploads.  By default, `AjaxFileUploader` assumes you want to upload to Amazon's S3, but can be subclassed to change this behavior if desired.  Pull requests welcome! 
+In short, it implements a callable class, `AjaxFileUploader` that you can subclass use to handle uploads.  By default, `AjaxFileUploader` assumes you want to upload to Amazon's S3 (and do so expediently!), but can be subclassed to change this behavior if desired.  Pull requests welcome! 
 
 Usage
 =====
@@ -109,5 +109,7 @@ This code is such a trivial layer on top of [valum's uploader](http://valums.com
 
 * http://www.topfstedt.de/weblog/?p=558
 * http://www.elastician.com/2010/12/s3-multipart-upload-in-boto.html
+* https://github.com/valums/file-uploader
+* https://github.com/alexkuhl/file-uploader
 
 Many thanks to all for writing such helpful and readable code!
