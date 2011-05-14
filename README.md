@@ -9,8 +9,9 @@ Usage
 Step 1. Install django-ajax-uploader. 
 -------------------------------------
 Right now, you can either:
-* Download and install, or
-* `pip install -e git://github.com/GoodCloud/django-ajax-uploader.git#egg=ajaxuploader`  it from here. If there's demand, I'll look into pypi. 
+
+-	Download and install, or
+-	`pip install -e git://github.com/GoodCloud/django-ajax-uploader.git#egg=ajaxuploader`  it from here. If there's demand, I'll look into pypi. 
 
 Step 2. Include it in your app's views and urls.
 ------------------------------------------------
