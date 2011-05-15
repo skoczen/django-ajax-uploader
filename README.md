@@ -89,6 +89,7 @@ That's all you need to get rolling. However, it's likely you actually want to do
 
 	    def _upload_complete(self, request, filename):
 	        print "Save the fact that %s's upload was completed to the database, and do important things!"  % filename
+	        return {}
 
 	my_uploader = MyAjaxFileUploader()
 

@@ -15,7 +15,9 @@ class AjaxFileUploader(object):
         return filename
 
     def _upload_complete(self, request, filename):
-        pass
+        """Overriden to performs any actions needed post-upload, and
+            returns a dict to be added to the render / json context"""
+        return {}
 
     def _upload_chunk(self, pool, mp, chunk, counter):
         buffer = StringIO()
@@ -87,8 +89,9 @@ class AjaxFileUploader(object):
             success = self._save_upload( upload, filename, is_raw )
      
             # callback
-            self._upload_complete(request, filename)
+            extra_context = self._upload_complete(request, filename)
 
             # let Ajax Upload know whether we saved it or not
             ret_json = { 'success': success, }
+            ret_json.update(extra_context)
             return HttpResponse( json.dumps( ret_json ) )
