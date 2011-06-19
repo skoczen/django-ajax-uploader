@@ -80,7 +80,7 @@ Backends
 Backend Selection
 -----------------
 
-Backends are available in `ajaxuploader.backends', to select the backend you want to use simply give the `backend' parameter when instantiating AjaxFileUploader. For instance, if you want to the use LocalUploadBackend in order to store the uploaded files locally:
+Backends are available in `ajaxuploader.backends`. To select the backend you want to use simply specify the `backend` parameter when instantiating `AjaxFileUploader`. For instance, if you want to the use `LocalUploadBackend` in order to store the uploaded files locally:
 
 views.py
 
@@ -89,7 +89,7 @@ views.py
     ...
     import_uploader = AjaxFileUploader(backend=LocalUploadBackend)
 
-Each backend has its own configuration. As an example, the `LocalUploadBackend' has the constant `UPLOAD_DIR' which specifies where the files should be stored, based on MEDIA_ROOT. By default, the `UPLOAD_DIR' is set to `uploads', which means the files will be stored at `MEDIA_ROOT/UPLOAD_DIR'. If you want to use an alternative place for storing the files, you need to set a new value for this constant:
+Each backend has its own configuration. As an example, the `LocalUploadBackend` has the constant `UPLOAD_DIR` which specifies where the files should be stored, based on `MEDIA_ROOT`. By default, the `UPLOAD_DIR` is set to `uploads`, which means the files will be stored at `MEDIA_ROOT/UPLOAD_DIR`. If you want to use an alternative place for storing the files, you need to set a new value for this constant:
 
     from ajaxuploader.backends.local import LocalUploadBackend
 
@@ -97,26 +97,25 @@ Each backend has its own configuration. As an example, the `LocalUploadBackend' 
 	LocalUploadBackend.UPLOAD_DIR = "tmp"
     import_uploader = AjaxFileUploader(backend=LocalUploadBackend)
 
-Similarly, the `ThumbnailUploadBackend' has the constant `DIMENSION', which determines the dimension of the thumbnail image that will be created. The string format for this constant is the same as for sorl-thumbnail.
+Similarly, the `ThumbnailUploadBackend` has the constant `DIMENSION`, which determines the dimension of the thumbnail image that will be created. The string format for this constant is the same as for `sorl-thumbnail`.
 
 Backends Available
 ------------------
 
 The following backends are available:
 
-    - backends
-	    - *local.LocalUploadBackend*: Store the file locally. You can specify the directory where files will be saved through the `UPLOAD_DIR' constant. This backend will also include in the response sent to the client a `path' variable with the path in the server where the file can be accessed.
-		- *s3.S3UploadBackend*: Store the file in Amazon S3.
-		- *thumbnail.ThumbnailUploadBackend*: Depends on sorl-thumbnail. Used for images upload that needs cropping. Like `LocalUploadBackend', it includes in the response a `path' variable pointing to the image in the server. The image dimension can be set through `ThumbnailUploadBackend.DIMENSION', by default it is set to "100x100".
+* `local.LocalUploadBackend`: Store the file locally. You can specify the directory where files will be saved through the `UPLOAD_DIR` constant. This backend will also include in the response sent to the client a `path` variable with the path in the server where the file can be accessed.
+* `s3.S3UploadBackend`: Store the file in Amazon S3.
+* `thumbnail.ThumbnailUploadBackend`: Depends on `sorl-thumbnail`. Used for images upload that needs re-dimensioning/cropping. Like `LocalUploadBackend`, it includes in the response a `path` variable pointing to the image in the server. The image dimension can be set through `ThumbnailUploadBackend.DIMENSION`, by default it is set to "100x100".
 
 Customization
 -------------
 
-In order to write your custom backend, you need to inherit from `backends.base.AbstractUploadBackend' and implement the `upload_chunk' method, which will receive the string representing a chunk of data that was just read from the client. The following methods are optional and should be implement if you want to take advantage of their purpose:
+In order to write your custom backend, you need to inherit from `backends.base.AbstractUploadBackend` and implement the `upload_chunk` method, which will receive the string representing a chunk of data that was just read from the client. The following methods are optional and should be implement if you want to take advantage of their purpose:
 
-    - *setup*: given the original filename, do any pre-processing needed before uploading the file (for example, for S3 backend, this method is used to establish a connection with S3 server).
-    - *update_filename*: given the `request' object and the original name of the file being updated, returns a new filename which will be used to refer to the file being saved, also this filename will be returned to the client.
-    - *upload_complete*: receives the `request' object and the updated filename (as described on `update_filename') and do any processing needed after upload is complete (like croping the image or disconnecting from the server). If a dict is returned, it is used to update the response returned to the client.
+* `setup`: given the original filename, do any pre-processing needed before uploading the file (for example, for S3 backend, this method is used to establish a connection with S3 server).
+* `update_filename`: given the `request` object and the original name of the file being updated, returns a new filename which will be used to refer to the file being saved, also this filename will be returned to the client.
+* `upload_complete`: receives the `request` object and the updated filename (as described on `update_filename`) and do any processing needed after upload is complete (like croping the image or disconnecting from the server). If a dict is returned, it is used to update the response returned to the client.
 
 
 Caveats
