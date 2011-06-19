@@ -6,7 +6,7 @@ from ajaxuploader.backends.s3 import S3UploadBackend
 class AjaxFileUploader(object):
     def __init__(self, backend=None):
         if backend is None:
-            backend = S3UploadBackend()
+            backend = S3UploadBackend
         self._backend = backend()
 
     def __call__(self,request):
