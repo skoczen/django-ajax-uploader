@@ -12,6 +12,12 @@ class LocalUploadBackend(AbstractUploadBackend):
     def setup(self, filename):
         self._filename = os.path.join(
             os.path.join(settings.MEDIA_ROOT, self.UPLOAD_DIR), filename)
+
+        try:
+            os.makedirs(os.path.realpath(os.path.dirname(self._filename)))
+        except:
+            pass
+
         self._dest = BufferedWriter(FileIO(self._filename, "wb"))
 
     def upload_chunk(self, chunk):
