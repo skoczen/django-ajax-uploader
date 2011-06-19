@@ -2,13 +2,15 @@ class AbstractUploadBackend(object):
     BUFFER_SIZE = 10485760  # 10MB
 
     def setup(self, filename):
-        """TODO"""
+        """Responsible for doing any pre-processing needed before the upload
+        starts."""
 
     def update_filename(self, request, filename):
         """Returns a new name for the file being uploaded."""
 
     def upload_chunk(self, chunk):
-        """TODO"""
+        """Called when a string was read from the client."""
+        raise NotImplementedError
 
     def upload_complete(self, request, filename):
         """Overriden to performs any actions needed post-upload, and returns
