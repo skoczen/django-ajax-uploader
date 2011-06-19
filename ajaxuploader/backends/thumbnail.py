@@ -1,14 +1,14 @@
 import os
 
+from django.conf import settings
 from sorl.thumbnail import get_thumbnail
 
 from ajaxuploader.backends.local import LocalUploadBackend
 
 class ThumbnailUploadBackend(LocalUploadBackend):
-    def __init__(self, dimension):
-        self._dimension = dimension
-    
+    DIMENSION = "100x100"
+
     def upload_complete(self, request, filename):
-        thumbnail = get_thumbnail(self._filename, self._dimension)
-        os.unlink(self._filename)
-        return {"path": thumbnail.name}
+        thumbnail = get_thumbnail(self._path, self.DIMENSION)
+        os.unlink(self._path)
+        return {"path": settings.MEDIA_URL + thumbnail.name}
