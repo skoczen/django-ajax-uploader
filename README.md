@@ -1,8 +1,8 @@
 `django-ajax-uploader` provides a useful class you can use to easily implement ajax uploads.
 
-It uses valum's great uploader: https://github.com/valums/file-uploader ,and draws heavy inspiration and some code from https://github.com/alexkuhl/file-uploader
+It uses valum's great uploader: https://github.com/valums/file-uploader , and draws heavy inspiration and some code from https://github.com/alexkuhl/file-uploader
 
-In short, it implements a callable class, `AjaxFileUploader` that you can subclass use to handle uploads.  By default, `AjaxFileUploader` assumes you want to upload to Amazon's S3 (and do so expediently!), but can be subclassed to change this behavior if desired.  Pull requests welcome! 
+In short, it implements a callable class, `AjaxFileUploader` that you can use to handle uploads.  By default, `AjaxFileUploader` assumes you want to upload to Amazon's S3, but you can select any other backend if desired or write your own (see backends section below).  Pull requests welcome! 
 
 Usage
 =====
@@ -74,29 +74,48 @@ This sample is included in the templates directory, but at the minimum, you need
 	</body>
 	</html>
 
-Step 4. Subclass and override if needed.
-----------------------------------------
-That's all you need to get rolling. However, it's likely you actually want to do something with those files the user just uploaded. For that, you can subclass AjaxFileUploader, and override functions and constants.  AjaxFileUploader has a fair bit of configurability.  The example below shows all of the most common functions and constants redefined.
 
-	class MyAjaxFileUploader(AjaxFileUploader):
-		NUM_PARALLEL_PROCESSES = 48   		# Your servers are way better than mine
-	    BUFFER_SIZE = 10485760  # 100MB		# In the future, 10 MB is nothing. 
+Backends
+========
+Backend Selection
+-----------------
 
-	    def _update_filename(self, request, filename):
-	    	# This example timestamps the filename, so we know they're always unique.
-	        import time
-	        return "import/%s.%s" % (int(time.time()), filename,)
+Backends are available in `ajaxuploader.backends`. To select the backend you want to use simply specify the `backend` parameter when instantiating `AjaxFileUploader`. For instance, if you want to the use `LocalUploadBackend` in order to store the uploaded files locally:
 
-	    def _upload_complete(self, request, filename):
-	        print "Save the fact that %s's upload was completed to the database, and do important things!"  % filename
-	        return {}
+views.py
 
-	my_uploader = MyAjaxFileUploader()
+    from ajaxuploader.backends.local import LocalUploadBackend
 
+    ...
+    import_uploader = AjaxFileUploader(backend=LocalUploadBackend)
 
-Advanced Usage / Not uploading to S3
-====================================
-At the moment, ajax-upload is built for s3.  However, you can easily redefine the `_save_upload` method, and save the stream/file wherever you'd like.  Pull requests are welcome for further abstraction.
+Each backend has its own configuration. As an example, the `LocalUploadBackend` has the constant `UPLOAD_DIR` which specifies where the files should be stored, based on `MEDIA_ROOT`. By default, the `UPLOAD_DIR` is set to `uploads`, which means the files will be stored at `MEDIA_ROOT/UPLOAD_DIR`. If you want to use an alternative place for storing the files, you need to set a new value for this constant:
+
+    from ajaxuploader.backends.local import LocalUploadBackend
+
+	...
+	LocalUploadBackend.UPLOAD_DIR = "tmp"
+    import_uploader = AjaxFileUploader(backend=LocalUploadBackend)
+
+Similarly, the `ThumbnailUploadBackend` has the constant `DIMENSION`, which determines the dimension of the thumbnail image that will be created. The string format for this constant is the same as for `sorl-thumbnail`.
+
+Backends Available
+------------------
+
+The following backends are available:
+
+* `local.LocalUploadBackend`: Store the file locally. You can specify the directory where files will be saved through the `UPLOAD_DIR` constant. This backend will also include in the response sent to the client a `path` variable with the path in the server where the file can be accessed.
+* `s3.S3UploadBackend`: Store the file in Amazon S3.
+* `thumbnail.ThumbnailUploadBackend`: Depends on `sorl-thumbnail`. Used for images upload that needs re-dimensioning/cropping. Like `LocalUploadBackend`, it includes in the response a `path` variable pointing to the image in the server. The image dimension can be set through `ThumbnailUploadBackend.DIMENSION`, by default it is set to "100x100".
+
+Customization
+-------------
+
+In order to write your custom backend, you need to inherit from `backends.base.AbstractUploadBackend` and implement the `upload_chunk` method, which will receive the string representing a chunk of data that was just read from the client. The following methods are optional and should be implement if you want to take advantage of their purpose:
+
+* `setup`: given the original filename, do any pre-processing needed before uploading the file (for example, for S3 backend, this method is used to establish a connection with S3 server).
+* `update_filename`: given the `request` object and the original name of the file being updated, returns a new filename which will be used to refer to the file being saved, also this filename will be returned to the client.
+* `upload_complete`: receives the `request` object and the updated filename (as described on `update_filename`) and do any processing needed after upload is complete (like croping the image or disconnecting from the server). If a dict is returned, it is used to update the response returned to the client.
 
 
 Caveats
