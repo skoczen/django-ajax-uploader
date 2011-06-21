@@ -1,6 +1,9 @@
 class AbstractUploadBackend(object):
     BUFFER_SIZE = 10485760  # 10MB
 
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
+
     def setup(self, filename):
         """Responsible for doing any pre-processing needed before the upload
         starts."""
@@ -9,7 +12,8 @@ class AbstractUploadBackend(object):
         """Returns a new name for the file being uploaded."""
 
     def upload_chunk(self, chunk):
-        """Called when a string was read from the client."""
+        """Called when a string was read from the client, responsible for 
+        writing that string to the destination file."""
         raise NotImplementedError
 
     def upload_complete(self, request, filename):

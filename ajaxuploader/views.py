@@ -4,10 +4,10 @@ import json
 from ajaxuploader.backends.s3 import S3UploadBackend
 
 class AjaxFileUploader(object):
-    def __init__(self, backend=None):
+    def __init__(self, backend=None, **kwargs):
         if backend is None:
             backend = S3UploadBackend
-        self._backend = backend()
+        self._backend = backend(**kwargs)
 
     def __call__(self,request):
         return self._ajax_upload(request)

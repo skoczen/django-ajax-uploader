@@ -9,13 +9,14 @@ from ajaxuploader.backends.base import AbstractUploadBackend
 class S3UploadBackend(AbstractUploadBackend):
     NUM_PARALLEL_PROCESSES = 4
 
-    def _upload_chunk(self, chunk):
+    def upload_chunk(self, chunk):
+        self._counter += 1
         buffer = StringIO()
         buffer.write(chunk)
         self._pool.apply_async(
             self._mp.upload_part_from_file(buffer, self._counter))
         buffer.close()
-        self._counter += 1
+        
 
     def setup(self, filename):
         self._bucket = boto.connect_s3(settings.AWS_ACCESS_KEY_ID,

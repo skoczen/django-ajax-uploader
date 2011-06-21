@@ -18,13 +18,16 @@ Step 2. Include it in your app's views and urls.
 You'll need to make sure to meet the csrf requirements to still make valum's uploader work.  Code similar to the following should work:
 
 views.py
-
+	from django.shortcuts import render_to_response
 	from ajaxuploader.views import AjaxFileUploader
 	from django.middleware.csrf import get_token
-	@render_to("import.html")
+
 	def start(request):
 	    csrf_token = get_token( request )
-	    return locals()
+		return render_to_response('import.html',
+		                   locals(),
+		                   context_instance=RequestContext(request))
+
 
 	import_uploader = AjaxFileUploader()
 
@@ -77,10 +80,75 @@ This sample is included in the templates directory, but at the minimum, you need
 
 Backends
 ========
-Backend Selection
------------------
 
-Backends are available in `ajaxuploader.backends`. To select the backend you want to use simply specify the `backend` parameter when instantiating `AjaxFileUploader`. For instance, if you want to the use `LocalUploadBackend` in order to store the uploaded files locally:
+`django-ajax-uploader` can put the uploaded files into a number of places, and perform actions on the files uploaded. Currently, there are backends available for S3 (default) and local storage, as well as a locally stored image thumbnail backend.  Creating a custom backend is fairly straightforward, and pull requests are welcome.
+
+Built-in Backends
+------------------
+
+`django-ajax-uploader` has following backends:
+
+### local.LocalUploadBackend ###
+
+Stores the file locally, by default to `{MEDIA_ROOT}/uploads`.
+
+Requirements:
+
+* None
+
+Settings:
+
+* `UPLOAD_DIR` : The directory to store the uploaded file in, within `MEDIA_ROOT`. Defaults to "uploads"
+* `BUFFER_SIZE`: The size of each chunk to write. Defaults to 10 MB.  See the caveat at the bottom before changing it.
+
+Context returned:
+
+* `path`: The full media path to the uploaded file.
+
+
+### s3.S3UploadBackend ###
+
+Stores the file in Amazon's S3.
+
+Requirements:
+
+* [boto](https://github.com/boto/boto)
+
+Settings:
+
+* `NUM_PARALLEL_PROCESSES` : Uploads to Amazon are parallelized to increase speed. If you have more cores and a big pipe, increase this setting for better performance. Defaults to 4
+* `BUFFER_SIZE`: The size of each chunk to write. Defaults to 10 MB.
+
+Context returned:
+
+* None
+
+
+### s3.S3UploadBackend ###
+
+Stores a thumbnail of the locally, optionally discarding the upload.  Subclasses `LocalUploadBackend`.
+
+Requirements:
+
+* [sorl-thumbnail](https://github.com/sorl/sorl-thumbnail)
+
+Settings:
+
+* `DIMENSIONS` : A string of the dimensions (WxH) to resize the uploaded image to. Defaults to "100x100"
+* `KEEP_ORIGINAL`: Whether to keep the originally uploaded file. Defaults to False.
+* `BUFFER_SIZE`: The size of each chunk to write. Defaults to 10 MB.
+
+Context returned:
+
+* `path`: The full media path to the uploaded file.
+
+
+Backend Usage
+------------------------
+
+The default backend is `s3.S3UploadBackend`. To use another backend, specify it when instantiating `AjaxFileUploader`.
+
+For instance, to use `LocalUploadBackend`:
 
 views.py
 
@@ -89,43 +157,38 @@ views.py
     ...
     import_uploader = AjaxFileUploader(backend=LocalUploadBackend)
 
-Each backend has its own configuration. As an example, the `LocalUploadBackend` has the constant `UPLOAD_DIR` which specifies where the files should be stored, based on `MEDIA_ROOT`. By default, the `UPLOAD_DIR` is set to `uploads`, which means the files will be stored at `MEDIA_ROOT/UPLOAD_DIR`. If you want to use an alternative place for storing the files, you need to set a new value for this constant:
 
-    from ajaxuploader.backends.local import LocalUploadBackend
+To set custom parameters, simply pass them along with instantiation.  For example, for larger thumbnails, preserving the originals:
+views.py
 
-	...
-	LocalUploadBackend.UPLOAD_DIR = "tmp"
-    import_uploader = AjaxFileUploader(backend=LocalUploadBackend)
+    from ajaxuploader.backends.thumbnail import ThumbnailUploadBackend
 
-Similarly, the `ThumbnailUploadBackend` has the constant `DIMENSION`, which determines the dimension of the thumbnail image that will be created. The string format for this constant is the same as for `sorl-thumbnail`.
+    ...
+    import_uploader = AjaxFileUploader(backend=ThumbnailUploadBackend, DIMENSIONS="500x500", KEEP_ORIGINAL=True)
 
-Backends Available
-------------------
 
-The following backends are available:
-
-* `local.LocalUploadBackend`: Store the file locally. You can specify the directory where files will be saved through the `UPLOAD_DIR` constant. This backend will also include in the response sent to the client a `path` variable with the path in the server where the file can be accessed.
-* `s3.S3UploadBackend`: Store the file in Amazon S3.
-* `thumbnail.ThumbnailUploadBackend`: Depends on `sorl-thumbnail`. Used for images upload that needs re-dimensioning/cropping. Like `LocalUploadBackend`, it includes in the response a `path` variable pointing to the image in the server. The image dimension can be set through `ThumbnailUploadBackend.DIMENSION`, by default it is set to "100x100".
-
-Customization
+Custom Backends
 -------------
 
-In order to write your custom backend, you need to inherit from `backends.base.AbstractUploadBackend` and implement the `upload_chunk` method, which will receive the string representing a chunk of data that was just read from the client. The following methods are optional and should be implement if you want to take advantage of their purpose:
+To write a custom backend, simply inherit from `backends.base.AbstractUploadBackend` and implement the `upload_chunk` method.  All possible methods to override are described below.
 
-* `setup`: given the original filename, do any pre-processing needed before uploading the file (for example, for S3 backend, this method is used to establish a connection with S3 server).
-* `update_filename`: given the `request` object and the original name of the file being updated, returns a new filename which will be used to refer to the file being saved, also this filename will be returned to the client.
-* `upload_complete`: receives the `request` object and the updated filename (as described on `update_filename`) and do any processing needed after upload is complete (like croping the image or disconnecting from the server). If a dict is returned, it is used to update the response returned to the client.
+* `upload_chunk` - takes a string, and writes it to the specified location.
+* `setup`: takes the original filename, does all pre-processing needed before uploading the file (for example, for the S3 backend, this method is used to establish a connection with the S3 server).
+* `update_filename`: takes the `request` object and the original name of the file being updated, can return a new filename which will be used to refer to the file being saved. If undefined, the uploaded filename is used.  If not overriden by `upload_complete`, this value will be returned in the response.
+* `upload_complete`: receives the `request` object and the filename post `update_filename` and does any cleanup or manipulation after the upload is complete.  (Examples:  cropping the image, disconnecting from the server).  If a dict is returned, it is used to update the response returned to the client.
 
 
 Caveats
 =======
-One note on changing `BUFFER_SIZE` - some users have reported problems using smaller buffer sizes.  I also saw random failed uploads with very small sizes like 32k.  10MB has been completely reliable for me, and in what I've read here and there, so do some testing if you want to try a different value.  Note that this doesn't have a big impact on the overall upload speed.
+`BUFFER_SIZE` - some users have reported problems using smaller buffer sizes.  I also saw random failed uploads with very small sizes like 32k.  10MB has been completely reliable for me, and in what I've read here and there, so do some testing if you want to try a different value.  Note that this doesn't have a big impact on the overall upload speed.
 
 
 Credits
 =======
-This code is such a trivial layer on top of [valum's uploader](http://valums.com/ajax-upload/), [boto](https://github.com/boto/boto), and [alex's ideas](http://kuhlit.blogspot.com/2011/04/ajax-file-uploads-and-csrf-in-django-13.html) it's silly.  However, I didn't find any implementations that *just worked*, so hopefully it's useful to someone else.  I also drew from these sources:
+Most of the backend abstraction was written by [chromano](https://github.com/chromano) and [shockflash](https://github.com/shockflash)
+
+
+This code began as such a trivial layer on top of [valum's uploader](http://valums.com/ajax-upload/), [boto](https://github.com/boto/boto), and [alex's ideas](http://kuhlit.blogspot.com/2011/04/ajax-file-uploads-and-csrf-in-django-13.html) it's silly.  However, I didn't find any implementations that *just worked*, so hopefully it's useful to someone else.  I also drew from these sources:
 
 * http://www.topfstedt.de/weblog/?p=558
 * http://www.elastician.com/2010/12/s3-multipart-upload-in-boto.html
