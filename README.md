@@ -18,6 +18,7 @@ Step 2. Include it in your app's views and urls.
 You'll need to make sure to meet the csrf requirements to still make valum's uploader work.  Code similar to the following should work:
 
 views.py
+
 	from django.shortcuts import render_to_response
 	from ajaxuploader.views import AjaxFileUploader
 	from django.middleware.csrf import get_token
@@ -98,7 +99,7 @@ Requirements:
 
 Settings:
 
-* `UPLOAD_DIR` : The directory to store the uploaded file in, within `MEDIA_ROOT`. Defaults to "uploads"
+* `UPLOAD_DIR` : The directory to store the uploaded file in, within `MEDIA_ROOT`. Defaults to "uploads".
 * `BUFFER_SIZE`: The size of each chunk to write. Defaults to 10 MB.  See the caveat at the bottom before changing it.
 
 Context returned:
@@ -116,7 +117,7 @@ Requirements:
 
 Settings:
 
-* `NUM_PARALLEL_PROCESSES` : Uploads to Amazon are parallelized to increase speed. If you have more cores and a big pipe, increase this setting for better performance. Defaults to 4
+* `NUM_PARALLEL_PROCESSES` : Uploads to Amazon are parallelized to increase speed. If you have more cores and a big pipe, increase this setting for better performance. Defaults to 4.
 * `BUFFER_SIZE`: The size of each chunk to write. Defaults to 10 MB.
 
 Context returned:
@@ -185,7 +186,7 @@ Caveats
 
 Credits
 =======
-Most of the backend abstraction was written by [chromano](https://github.com/chromano) and [shockflash](https://github.com/shockflash)
+Most of the backend abstraction was written by [chromano](https://github.com/chromano) and [shockflash](https://github.com/shockflash). 
 
 
 This code began as such a trivial layer on top of [valum's uploader](http://valums.com/ajax-upload/), [boto](https://github.com/boto/boto), and [alex's ideas](http://kuhlit.blogspot.com/2011/04/ajax-file-uploads-and-csrf-in-django-13.html) it's silly.  However, I didn't find any implementations that *just worked*, so hopefully it's useful to someone else.  I also drew from these sources:
