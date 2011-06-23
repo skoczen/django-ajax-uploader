@@ -1,6 +1,7 @@
 `django-ajax-uploader` provides a useful class you can use to easily implement ajax uploads.
 
-It uses valum's great uploader: https://github.com/valums/file-uploader , and draws heavy inspiration and some code from https://github.com/alexkuhl/file-uploader
+It uses valum's great uploader: https://github.com/valums/file-uploader, and draws heavy inspiration and some code from 
+https://github.com/alexkuhl/file-uploader
 
 In short, it implements a callable class, `AjaxFileUploader` that you can use to handle uploads. By default, `AjaxFileUploader` assumes you want to upload to local storage, but you can select any other backend if desired or write your own (see backends section below). Pull requests welcome!
 
@@ -17,6 +18,12 @@ demand, I'll look into pypi.
 
 ```
 $ pip install boto
+```
+
+- If you plan on using the MongoDB GridFS backend you will also need to install [pymongo](https://github.com/AloneRoad/pymongo)
+
+```
+$ pip install pymongo
 ```
 
 
@@ -111,7 +118,9 @@ This sample is included in the templates directory, but at the minimum, you need
 Backends
 ========
 
-`django-ajax-uploader` can put the uploaded files into a number of places, and perform actions on the files uploaded. Currently, there are backends available for local storage (default) and Amazon S3, as well as a locally stored image thumbnail backend. Creating a custom backend is fairly straightforward, and pull requests are welcome.
+`django-ajax-uploader` can put the uploaded files into a number of places, and perform actions on the files uploaded. Currently, 
+there are backends available for local storage (default), Amazon S3 and MongoDB (GridFS), as well as a locally stored image 
+thumbnail backend. Creating a custom backend is fairly straightforward, and pull requests are welcome.
 
 Built-in Backends
 ------------------
@@ -134,6 +143,30 @@ Settings:
 Context returned:
 
 * `path`: The full media path to the uploaded file.
+
+
+### mongodb.MongoDBUploadBackend ###
+
+Stores the file in MongoDB via GridFS
+
+Requirements
+
+* [pymongo](https://github.com/AloneRoad/pymongo)
+
+Settings:
+
+* `AJAXUPLOAD_MONGODB_HOST`: Specify the host of your MongoDB server. Defaults to localhost if not specified.
+* `AJAXUPLOAD_MONGODB_PORT`: Specify the port of your MongoDB server. Defaults to 27017 if not specified.
+
+Arguments
+
+* db (required): Specify the database within MongoDB you wish to use
+* collection (optional): Specify the collection within the db you wish to use. This is optional and will default to `fs` if not specified
+
+
+Context returned:
+
+* None
 
 
 ### s3.S3UploadBackend ###
@@ -178,15 +211,17 @@ Backend Usage
 
 The default backend is `local.LocalUploadBackend`. To use another backend, specify it when instantiating `AjaxFileUploader`.
 
-For instance, to use `LocalUploadBackend`:
+For instance, to use `MongoDBUploadBackend`:
 
 views.py
 
-    from ajaxuploader.backends.local import LocalUploadBackend
+```python
+from ajaxuploader.views import AjaxFileUploader
+from ajaxuploader.backends.mongodb import MongoDBUploadBackend
 
-    ...
-    import_uploader = AjaxFileUploader(backend=LocalUploadBackend)
-
+...
+import_uploader = AjaxFileUploader(backend=MongoDBUploadBackend, db='uploads')
+```
 
 To set custom parameters, simply pass them along with instantiation.  For example, for larger thumbnails, preserving the originals:
 views.py
