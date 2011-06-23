@@ -1,19 +1,20 @@
-from django.http import HttpResponse, HttpResponseBadRequest, Http404
 import json
 
-from ajaxuploader.backends.s3 import S3UploadBackend
+from django.http import HttpResponse, HttpResponseBadRequest, Http404
+
+from ajaxuploader.backends.local import LocalUploadBackend
 
 class AjaxFileUploader(object):
     def __init__(self, backend=None, **kwargs):
         if backend is None:
-            backend = S3UploadBackend
+            backend = LocalUploadBackend
         self._backend = backend(**kwargs)
 
     def __call__(self,request):
         return self._ajax_upload(request)
 
     def _ajax_upload(self, request):
-        if request.method == "POST":        
+        if request.method == "POST":
             if request.is_ajax():
                 # the file is stored raw in the request
                 upload = request
@@ -22,7 +23,7 @@ class AjaxFileUploader(object):
                 # is the "advanced" ajax upload
                 try:
                     filename = request.GET['qqfile']
-                except KeyError: 
+                except KeyError:
                     return HttpResponseBadRequest("AJAX request not valid")
             # not an ajax upload, so it was the "basic" iframe version with
             # submission via form
