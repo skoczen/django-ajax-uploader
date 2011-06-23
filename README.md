@@ -2,7 +2,7 @@
 
 It uses valum's great uploader: https://github.com/valums/file-uploader , and draws heavy inspiration and some code from https://github.com/alexkuhl/file-uploader
 
-In short, it implements a callable class, `AjaxFileUploader` that you can use to handle uploads.  By default, `AjaxFileUploader` assumes you want to upload to Amazon's S3, but you can select any other backend if desired or write your own (see backends section below).  Pull requests welcome! 
+In short, it implements a callable class, `AjaxFileUploader` that you can use to handle uploads. By default, `AjaxFileUploader` assumes you want to upload to local storage, but you can select any other backend if desired or write your own (see backends section below). Pull requests welcome!
 
 Usage
 =====
@@ -24,14 +24,18 @@ For Django 1.3 you will need to have the app in your installed apps tuple for co
 
 1. Add 'ajaxuploader' to you installed apps in settings.py
 
-	INSTALLED_APPS = (
-    	...
-    	"ajaxuploader",
-	)
+```
+INSTALLED_APPS = (
+    ...
+    "ajaxuploader",
+)
+```
 
 2. Then:
 
-	$ python manage.py collectstatic
+```
+$ python manage.py collectstatic
+```
 
 Step 3. Include it in your app's views and urls.
 ------------------------------------------------
@@ -39,62 +43,67 @@ You'll need to make sure to meet the csrf requirements to still make valum's upl
 
 views.py
 
-	from django.shortcuts import render
-	from ajaxuploader.views import AjaxFileUploader
-	from django.middleware.csrf import get_token
+```python
+from django.shortcuts import render
+from ajaxuploader.views import AjaxFileUploader
+from django.middleware.csrf import get_token
 
-	def start(request):
-	    csrf_token = get_token(request)
-		return render(request, 'import.html',
-			{'csrf_token': csrf_token})
+def start(request):
+    csrf_token = get_token(request)
+    return render(request, 'import.html',
+        {'csrf_token': csrf_token})
 
-	import_uploader = AjaxFileUploader()
-	
+import_uploader = AjaxFileUploader()
+```	
 
 urls.py 
 
-	url( r'ajax-upload$', views.import_uploader, name="my_ajax_upload"),
+```
+url(r'ajax-upload$', views.import_uploader, name="my_ajax_upload"),
+```
 
 Step 4. Set up your template.
 -----------------------------
 This sample is included in the templates directory, but at the minimum, you need:
 
-	<!doctype html> 
-	<head>
-		<script src="{{ STATIC_URL }}django-ajax-uploader/fileuploader.js" ></script>
-		<link href="{{ STATIC_URL }}django-ajax-uploader/fileuploader.css" media="screen" rel="stylesheet" type="text/css" />
-		<script>
-			var uploader = new qq.FileUploader( {
-			    action: "{% url my_ajax_upload %}",
-			    element: $('#file-uploader')[0],
-			    multiple: true,
-			    onComplete: function( id, fileName, responseJSON ) {
-			      if( responseJSON.success )
-			        alert( "success!" ) ;
-			      else
-			        alert( "upload failed!" ) ;
-			    },
-			    onAllComplete: function( uploads ) {
-			      // uploads is an array of maps
-			      // the maps look like this: { file: FileObject, response: JSONServerResponse }
-			      alert( "All complete!" ) ;
-			    },
-			    params: {
-			      'csrf_token': '{{ csrf_token }}',
-			      'csrf_name': 'csrfmiddlewaretoken',
-			      'csrf_xname': 'X-CSRFToken',
-			    },
-			  }) ;
-		</script>
-	</head>
-	<body>
-		<div id="file-uploader">       
-		    <noscript>          
-		        <p>Please enable JavaScript to use file uploader.</p>
-		    </noscript>         
-		</div>
-	</body>
-	</html>
+```
+<!doctype html>
+    <head>
+        <script src="{{ STATIC_URL }}django-ajax-uploader/fileuploader.js" ></script>
+        <link href="{{ STATIC_URL }}django-ajax-uploader/fileuploader.css" media="screen" rel="stylesheet" type="text/css" />
+        <script>
+            var uploader = new qq.FileUploader({
+                action: "{% url my_ajax_upload %}",
+                element: $('#file-uploader')[0],
+                multiple: true,
+                onComplete: function(id, fileName, responseJSON) {
+                    if(responseJSON.success) {
+                        alert("success!");
+                    } else {
+                        alert("upload failed!");
+                    }
+                },
+                onAllComplete: function(uploads) {
+                    // uploads is an array of maps
+                    // the maps look like this: {file: FileObject, response: JSONServerResponse}
+                    alert("All complete!");
+                },
+                params: {
+                    'csrf_token': '{{ csrf_token }}',
+                    'csrf_name': 'csrfmiddlewaretoken',
+                    'csrf_xname': 'X-CSRFToken',
+                },
+            });
+        </script>
+    </head>
+<body>
+    <div id="file-uploader">       
+        <noscript>          
+            <p>Please enable JavaScript to use file uploader.</p>
+        </noscript>         
+    </div>
+</body>
+</html>
 
 
 Backends
