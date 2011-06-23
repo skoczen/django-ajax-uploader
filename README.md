@@ -10,41 +10,59 @@ Step 1. Install django-ajax-uploader.
 -------------------------------------
 Right now, you can either:
 
--	Download and install, or
--	`pip install -e git://github.com/GoodCloud/django-ajax-uploader.git#egg=ajaxuploader`  it from here. If there's demand, I'll look into pypi. 
+- Download and install, or
+- `pip install -e git://github.com/GoodCloud/django-ajax-uploader.git#egg=ajaxuploader` it from here. If there's 
+demand, I'll look into pypi.
+- If you plan on using the Amazon S3 backend you will also need to install [boto](https://github.com/boto/boto)
 
-Step 2. Include it in your app's views and urls.
+	$ pip install boto
+
+
+Step 2. (Django 1.3 only)
+-------------------------
+For Django 1.3 you will need to have the app in your installed apps tuple for collect static to pick up the files.
+
+1. Add 'ajaxuploader' to you installed apps in settings.py
+
+	INSTALLED_APPS = (
+    	...
+    	"ajaxuploader",
+	)
+
+2. Then:
+
+	$ python manage.py collectstatic
+
+Step 3. Include it in your app's views and urls.
 ------------------------------------------------
 You'll need to make sure to meet the csrf requirements to still make valum's uploader work.  Code similar to the following should work:
 
 views.py
 
-	from django.shortcuts import render_to_response
+	from django.shortcuts import render
 	from ajaxuploader.views import AjaxFileUploader
 	from django.middleware.csrf import get_token
 
 	def start(request):
-	    csrf_token = get_token( request )
-		return render_to_response('import.html',
-		                   locals(),
-		                   context_instance=RequestContext(request))
-
+	    csrf_token = get_token(request)
+		return render(request, 'import.html',
+			{'csrf_token': csrf_token})
 
 	import_uploader = AjaxFileUploader()
-
+	
 
 urls.py 
 
-	url( r'ajax-upload$',                     views.import_uploader,             name="my_ajax_upload" ),
+	url( r'ajax-upload$', views.import_uploader, name="my_ajax_upload"),
 
-Step 3. Set up your template.
+Step 4. Set up your template.
 -----------------------------
 This sample is included in the templates directory, but at the minimum, you need:
 
 	<!doctype html> 
 	<head>
-		<script src="{{STATIC_URL}}django-ajax-uploader/fileuploader.js" ></script>
-		<link href="{{STATIC_URL}}django-ajax-uploader/fileuploader.css" media="screen" rel="stylesheet" type="text/css" />
+		<script src="{{ STATIC_URL }}django-ajax-uploader/fileuploader.js" ></script>
+		<link href="{{ STATIC_URL }}django-ajax-uploader/fileuploader.css" media="screen" rel="stylesheet" type="text/css" />
 		<script>
 			var uploader = new qq.FileUploader( {
 			    action: "{% url my_ajax_upload %}",
@@ -82,12 +100,12 @@ This sample is included in the templates directory, but at the minimum, you need
 Backends
 ========
 
-`django-ajax-uploader` can put the uploaded files into a number of places, and perform actions on the files uploaded. Currently, there are backends available for S3 (default) and local storage, as well as a locally stored image thumbnail backend.  Creating a custom backend is fairly straightforward, and pull requests are welcome.
+`django-ajax-uploader` can put the uploaded files into a number of places, and perform actions on the files uploaded. Currently, there are backends available for local storage (default) and Amazon S3, as well as a locally stored image thumbnail backend. Creating a custom backend is fairly straightforward, and pull requests are welcome.
 
 Built-in Backends
 ------------------
 
-`django-ajax-uploader` has following backends:
+`django-ajax-uploader` has the following backends:
 
 ### local.LocalUploadBackend ###
 
@@ -147,7 +165,7 @@ Context returned:
 Backend Usage
 ------------------------
 
-The default backend is `s3.S3UploadBackend`. To use another backend, specify it when instantiating `AjaxFileUploader`.
+The default backend is `local.LocalUploadBackend`. To use another backend, specify it when instantiating `AjaxFileUploader`.
 
 For instance, to use `LocalUploadBackend`:
 
