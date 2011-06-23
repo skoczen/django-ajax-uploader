@@ -22,7 +22,7 @@ Step 2. (Django 1.3 only)
 -------------------------
 For Django 1.3 you will need to have the app in your installed apps tuple for collect static to pick up the files.
 
-1. Add 'ajaxuploader' to you installed apps in settings.py
+First Add 'ajaxuploader' to you installed apps in settings.py
 
 ```
 INSTALLED_APPS = (
@@ -31,7 +31,7 @@ INSTALLED_APPS = (
 )
 ```
 
-2. Then:
+Then:
 
 ```
 $ python manage.py collectstatic
