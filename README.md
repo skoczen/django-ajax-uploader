@@ -11,11 +11,13 @@ Step 1. Install django-ajax-uploader.
 Right now, you can either:
 
 - Download and install, or
-- `pip install -e git://github.com/GoodCloud/django-ajax-uploader.git#egg=ajaxuploader` it from here. If there's 
+- `pip install -e git://github.com/chrisjones-brack3t/django-ajax-uploader.git#egg=ajaxuploader` it from here. If there's 
 demand, I'll look into pypi.
 - If you plan on using the Amazon S3 backend you will also need to install [boto](https://github.com/boto/boto)
 
-	$ pip install boto
+```
+$ pip install boto
+```
 
 
 Step 2. (Django 1.3 only)
@@ -66,7 +68,7 @@ Step 4. Set up your template.
 -----------------------------
 This sample is included in the templates directory, but at the minimum, you need:
 
-```
+```html
 <!doctype html>
     <head>
         <script src="{{ STATIC_URL }}django-ajax-uploader/fileuploader.js" ></script>
@@ -104,7 +106,7 @@ This sample is included in the templates directory, but at the minimum, you need
     </div>
 </body>
 </html>
-
+```
 
 Backends
 ========
