@@ -1,8 +1,9 @@
 `django-ajax-uploader` provides a useful class you can use to easily implement ajax uploads.
 
-It uses valum's great uploader: https://github.com/valums/file-uploader , and draws heavy inspiration and some code from https://github.com/alexkuhl/file-uploader
+It uses valum's great uploader: https://github.com/valums/file-uploader, and draws heavy inspiration and some code from 
+https://github.com/alexkuhl/file-uploader
 
-In short, it implements a callable class, `AjaxFileUploader` that you can use to handle uploads.  By default, `AjaxFileUploader` assumes you want to upload to Amazon's S3, but you can select any other backend if desired or write your own (see backends section below).  Pull requests welcome! 
+In short, it implements a callable class, `AjaxFileUploader` that you can use to handle uploads. By default, `AjaxFileUploader` assumes you want to upload to local storage, but you can select any other backend if desired or write your own (see backends section below). Pull requests welcome!
 
 Usage
 =====
@@ -10,84 +11,121 @@ Step 1. Install django-ajax-uploader.
 -------------------------------------
 Right now, you can either:
 
--	Download and install, or
--	`pip install -e git://github.com/GoodCloud/django-ajax-uploader.git#egg=ajaxuploader`  it from here. If there's demand, I'll look into pypi. 
+- Download and install, or
+- `pip install -e git://github.com/chrisjones-brack3t/django-ajax-uploader.git#egg=ajaxuploader` it from here. If there's 
+demand, I'll look into pypi.
+- If you plan on using the Amazon S3 backend you will also need to install [boto](https://github.com/boto/boto)
 
-Step 2. Include it in your app's views and urls.
+```
+$ pip install boto
+```
+
+- If you plan on using the MongoDB GridFS backend you will also need to install [pymongo](https://github.com/AloneRoad/pymongo)
+
+```
+$ pip install pymongo
+```
+
+
+Step 2. (Django 1.3 only)
+-------------------------
+For Django 1.3 you will need to have the app in your installed apps tuple for collect static to pick up the files.
+
+First Add 'ajaxuploader' to you installed apps in settings.py
+
+```
+INSTALLED_APPS = (
+    ...
+    "ajaxuploader",
+)
+```
+
+Then:
+
+```
+$ python manage.py collectstatic
+```
+
+Step 3. Include it in your app's views and urls.
 ------------------------------------------------
 You'll need to make sure to meet the csrf requirements to still make valum's uploader work.  Code similar to the following should work:
 
 views.py
 
-	from django.shortcuts import render_to_response
-	from ajaxuploader.views import AjaxFileUploader
-	from django.middleware.csrf import get_token
+```python
+from django.shortcuts import render
+from ajaxuploader.views import AjaxFileUploader
+from django.middleware.csrf import get_token
 
-	def start(request):
-	    csrf_token = get_token( request )
-		return render_to_response('import.html',
-		                   locals(),
-		                   context_instance=RequestContext(request))
+def start(request):
+    csrf_token = get_token(request)
+    return render(request, 'import.html',
+        {'csrf_token': csrf_token})
 
-
-	import_uploader = AjaxFileUploader()
-
+import_uploader = AjaxFileUploader()
+```	
 
 urls.py 
 
-	url( r'ajax-upload$',                     views.import_uploader,             name="my_ajax_upload" ),
+```
+url(r'ajax-upload$', views.import_uploader, name="my_ajax_upload"),
+```
 
-Step 3. Set up your template.
+Step 4. Set up your template.
 -----------------------------
 This sample is included in the templates directory, but at the minimum, you need:
 
-	<!doctype html> 
-	<head>
-		<script src="{{STATIC_URL}}django-ajax-uploader/fileuploader.js" ></script>
-		<link href="{{STATIC_URL}}django-ajax-uploader/fileuploader.css" media="screen" rel="stylesheet" type="text/css" />
-		<script>
-			var uploader = new qq.FileUploader( {
-			    action: "{% url my_ajax_upload %}",
-			    element: $('#file-uploader')[0],
-			    multiple: true,
-			    onComplete: function( id, fileName, responseJSON ) {
-			      if( responseJSON.success )
-			        alert( "success!" ) ;
-			      else
-			        alert( "upload failed!" ) ;
-			    },
-			    onAllComplete: function( uploads ) {
-			      // uploads is an array of maps
-			      // the maps look like this: { file: FileObject, response: JSONServerResponse }
-			      alert( "All complete!" ) ;
-			    },
-			    params: {
-			      'csrf_token': '{{ csrf_token }}',
-			      'csrf_name': 'csrfmiddlewaretoken',
-			      'csrf_xname': 'X-CSRFToken',
-			    },
-			  }) ;
-		</script>
-	</head>
-	<body>
-		<div id="file-uploader">       
-		    <noscript>          
-		        <p>Please enable JavaScript to use file uploader.</p>
-		    </noscript>         
-		</div>
-	</body>
-	</html>
-
+```html
+<!doctype html>
+    <head>
+        <script src="{{ STATIC_URL }}django-ajax-uploader/fileuploader.js" ></script>
+        <link href="{{ STATIC_URL }}django-ajax-uploader/fileuploader.css" media="screen" rel="stylesheet" type="text/css" />
+        <script>
+            var uploader = new qq.FileUploader({
+                action: "{% url my_ajax_upload %}",
+                element: $('#file-uploader')[0],
+                multiple: true,
+                onComplete: function(id, fileName, responseJSON) {
+                    if(responseJSON.success) {
+                        alert("success!");
+                    } else {
+                        alert("upload failed!");
+                    }
+                },
+                onAllComplete: function(uploads) {
+                    // uploads is an array of maps
+                    // the maps look like this: {file: FileObject, response: JSONServerResponse}
+                    alert("All complete!");
+                },
+                params: {
+                    'csrf_token': '{{ csrf_token }}',
+                    'csrf_name': 'csrfmiddlewaretoken',
+                    'csrf_xname': 'X-CSRFToken',
+                },
+            });
+        </script>
+    </head>
+<body>
+    <div id="file-uploader">       
+        <noscript>          
+            <p>Please enable JavaScript to use file uploader.</p>
+        </noscript>         
+    </div>
+</body>
+</html>
+```
 
 Backends
 ========
 
-`django-ajax-uploader` can put the uploaded files into a number of places, and perform actions on the files uploaded. Currently, there are backends available for S3 (default) and local storage, as well as a locally stored image thumbnail backend.  Creating a custom backend is fairly straightforward, and pull requests are welcome.
+`django-ajax-uploader` can put the uploaded files into a number of places, and perform actions on the files uploaded. Currently, 
+there are backends available for local storage (default), Amazon S3 and MongoDB (GridFS), as well as a locally stored image 
+thumbnail backend. Creating a custom backend is fairly straightforward, and pull requests are welcome.
 
 Built-in Backends
 ------------------
 
-`django-ajax-uploader` has following backends:
+`django-ajax-uploader` has the following backends:
 
 ### local.LocalUploadBackend ###
 
@@ -105,6 +143,30 @@ Settings:
 Context returned:
 
 * `path`: The full media path to the uploaded file.
+
+
+### mongodb.MongoDBUploadBackend ###
+
+Stores the file in MongoDB via GridFS
+
+Requirements
+
+* [pymongo](https://github.com/AloneRoad/pymongo)
+
+Settings:
+
+* `AJAXUPLOAD_MONGODB_HOST`: Specify the host of your MongoDB server. Defaults to localhost if not specified.
+* `AJAXUPLOAD_MONGODB_PORT`: Specify the port of your MongoDB server. Defaults to 27017 if not specified.
+
+Arguments
+
+* db (required): Specify the database within MongoDB you wish to use
+* collection (optional): Specify the collection within the db you wish to use. This is optional and will default to `fs` if not specified
+
+
+Context returned:
+
+* None
 
 
 ### s3.S3UploadBackend ###
@@ -147,17 +209,19 @@ Context returned:
 Backend Usage
 ------------------------
 
-The default backend is `s3.S3UploadBackend`. To use another backend, specify it when instantiating `AjaxFileUploader`.
+The default backend is `local.LocalUploadBackend`. To use another backend, specify it when instantiating `AjaxFileUploader`.
 
-For instance, to use `LocalUploadBackend`:
+For instance, to use `MongoDBUploadBackend`:
 
 views.py
 
-    from ajaxuploader.backends.local import LocalUploadBackend
+```python
+from ajaxuploader.views import AjaxFileUploader
+from ajaxuploader.backends.mongodb import MongoDBUploadBackend
 
-    ...
-    import_uploader = AjaxFileUploader(backend=LocalUploadBackend)
-
+...
+import_uploader = AjaxFileUploader(backend=MongoDBUploadBackend, db='uploads')
+```
 
 To set custom parameters, simply pass them along with instantiation.  For example, for larger thumbnails, preserving the originals:
 views.py
