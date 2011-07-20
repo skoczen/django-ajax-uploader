@@ -22,4 +22,5 @@ class LocalUploadBackend(AbstractUploadBackend):
 
     def upload_complete(self, request, filename):
         path = settings.MEDIA_URL + self.UPLOAD_DIR + "/" + filename
+        self._dest.close()
         return {"path": path}
