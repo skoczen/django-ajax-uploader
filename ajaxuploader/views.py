@@ -8,7 +8,7 @@ class AjaxFileUploader(object):
     def __init__(self, backend=None, **kwargs):
         if backend is None:
             backend = LocalUploadBackend
-        self._backend = backend(**kwargs)
+        self.get_backend = lambda: backend(**kwargs)
 
     def __call__(self,request):
         return self._ajax_upload(request)
@@ -42,14 +42,16 @@ class AjaxFileUploader(object):
                     raise Http404("Bad Upload")
                 filename = upload.name
 
+            backend = self.get_backend()
+
             # custom filename handler
-            filename = (self._backend.update_filename(request, filename)
+            filename = (backend.update_filename(request, filename)
                         or filename)
             # save the file
-            self._backend.setup(filename)
-            success = self._backend.upload(upload, filename, is_raw)
+            backend.setup(filename)
+            success = backend.upload(upload, filename, is_raw)
             # callback
-            extra_context = self._backend.upload_complete(request, filename)
+            extra_context = backend.upload_complete(request, filename)
 
             # let Ajax Upload know whether we saved it or not
             ret_json = {'success': success, 'filename': filename}
