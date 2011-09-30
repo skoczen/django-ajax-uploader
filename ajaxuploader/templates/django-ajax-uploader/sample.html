@@ -12,6 +12,7 @@
     </div>
     
     <script>
+    $(function(){
         var uploader = new qq.FileUploader( {
             action: "{% url my_ajax_upload %}",
             element: $('#file-uploader')[0],
@@ -33,7 +34,7 @@
               'csrf_xname': 'X-CSRFToken',
             },
           }) ;
-    </script>    
-    
+    });
+    </script>
 </body>
 </html>

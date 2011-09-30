@@ -46,13 +46,13 @@ You'll need to make sure to meet the csrf requirements to still make valum's upl
 views.py
 
 ```python
-from django.shortcuts import render
+from django.shortcuts import render_to_response
 from ajaxuploader.views import AjaxFileUploader
 from django.middleware.csrf import get_token
 
 def start(request):
     csrf_token = get_token(request)
-    return render(request, 'import.html',
+    return render_to_response(request, 'import.html',
         {'csrf_token': csrf_token})
 
 import_uploader = AjaxFileUploader()
@@ -61,6 +61,7 @@ import_uploader = AjaxFileUploader()
 urls.py 
 
 ```
+url(r'start$', views.start, name="start"),
 url(r'ajax-upload$', views.import_uploader, name="my_ajax_upload"),
 ```
 
@@ -71,9 +72,11 @@ This sample is included in the templates directory, but at the minimum, you need
 ```html
 <!doctype html>
     <head>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" ></script>
         <script src="{{ STATIC_URL }}django-ajax-uploader/fileuploader.js" ></script>
         <link href="{{ STATIC_URL }}django-ajax-uploader/fileuploader.css" media="screen" rel="stylesheet" type="text/css" />
         <script>
+        	$(function(){
             var uploader = new qq.FileUploader({
                 action: "{% url my_ajax_upload %}",
                 element: $('#file-uploader')[0],
@@ -96,6 +99,7 @@ This sample is included in the templates directory, but at the minimum, you need
                     'csrf_xname': 'X-CSRFToken',
                 },
             });
+	    	});
         </script>
     </head>
 <body>
