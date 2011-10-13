@@ -44,11 +44,9 @@ class AjaxFileUploader(object):
 
             backend = self.get_backend()
 
-            print "I will try..."
             if hasattr(backend, 'set_object_id') and 'object_id' in kwargs:
-                print "yup"
                 backend.set_object_id(kwargs['object_id'])
-            print "I tried"
+            
             # custom filename handler
             filename = (backend.update_filename(request, filename)
                         or filename)

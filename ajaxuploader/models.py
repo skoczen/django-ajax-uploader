@@ -7,3 +7,4 @@ class UploadedFile(models.Model):
     object_id = models.PositiveIntegerField(null=True, blank=True)
     content_object = generic.GenericForeignKey('content_type', 'object_id')
     path = models.CharField(max_length=400)
+    filename = models.CharField(max_length=200)
