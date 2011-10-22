@@ -9,5 +9,6 @@ setup(
     name = "ajaxuploader",
     version = "0.1",
     packages = find_packages(),
+    package_data ={'ajaxuploader':   ['static/ajaxuploader/js/fileuploader.js', 'static/ajaxuploader/css/fileuploader.css']},
     zip_safe = False,
 )
