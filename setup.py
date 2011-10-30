@@ -7,7 +7,7 @@ SOURCE_DIR = os.path.join(ROOT_DIR)
 
 setup(
     name = "ajaxuploader",
-    version = "0.1",
+    version = "0.1.1",
     packages = find_packages(),
     include_package_data=True,
     zip_safe=False, # because we're including media that Django needs
