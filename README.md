@@ -76,8 +76,8 @@ This sample is included in the templates directory, but at the minimum, you need
 <!doctype html>
     <head>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" ></script>
-        <script src="{{ STATIC_URL }}django-ajax-uploader/fileuploader.js" ></script>
-        <link href="{{ STATIC_URL }}django-ajax-uploader/fileuploader.css" media="screen" rel="stylesheet" type="text/css" />
+        <script src="{{ STATIC_URL }}ajaxuploader/js/fileuploader.js" ></script>
+        <link href="{{ STATIC_URL }}ajaxuploader/css/fileuploader.css" media="screen" rel="stylesheet" type="text/css" />
         <script>
         	$(function(){
             var uploader = new qq.FileUploader({
