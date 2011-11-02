@@ -63,7 +63,6 @@ import_uploader = AjaxFileUploader()
 
 urls.py 
 
-```
 url(r'start$', views.start, name="start"),
 url(r'ajax-upload$', views.import_uploader, name="my_ajax_upload"),
 ```
@@ -126,6 +125,28 @@ Built-in Backends
 ------------------
 
 `django-ajax-uploader` has the following backends:
+
+### couch.CouchDBUploadBackend ###
+
+Stores the file in a CouchDB backend
+
+Requirements
+
+* [couchdb](http://code.google.com/p/couchdb-python/)
+
+Settings:
+
+* `AJAXUPLOAD_COUCHDB_HOST`: Specify the host of your CouchDB server. Defaults to `http://localhost:5984` if not specified.
+
+Arguments
+
+* db (required): Specify the database within CouchDB you wish to use
+
+
+Context returned:
+
+* None
+
 
 ### local.LocalUploadBackend ###
 
@@ -253,6 +274,7 @@ Credits
 Most of the backend abstraction was written by [chromano](https://github.com/chromano) and [shockflash](https://github.com/shockflash).  
 MongoDB support and saner defaults by [chrisjones-brack3t](https://github.com/chrisjones-brack3t).
 Threadsafe improvements and bugfixes by [dwaiter](https://github.com/dwaiter)
+CouchDB support by [paepke](https://github.com/paepke)
 
 This code began as such a trivial layer on top of [valum's uploader](http://valums.com/ajax-upload/), [boto](https://github.com/boto/boto), and [alex's ideas](http://kuhlit.blogspot.com/2011/04/ajax-file-uploads-and-csrf-in-django-13.html) it's silly.  However, I didn't find any implementations that *just worked*, so hopefully it's useful to someone else.  I also drew from these sources:
 
