@@ -63,6 +63,7 @@ import_uploader = AjaxFileUploader()
 
 urls.py 
 
+```
 url(r'start$', views.start, name="start"),
 url(r'ajax-upload$', views.import_uploader, name="my_ajax_upload"),
 ```
@@ -126,28 +127,6 @@ Built-in Backends
 
 `django-ajax-uploader` has the following backends:
 
-### couch.CouchDBUploadBackend ###
-
-Stores the file in a CouchDB backend
-
-Requirements
-
-* [couchdb](http://code.google.com/p/couchdb-python/)
-
-Settings:
-
-* `AJAXUPLOAD_COUCHDB_HOST`: Specify the host of your CouchDB server. Defaults to `http://localhost:5984` if not specified.
-
-Arguments
-
-* db (required): Specify the database within CouchDB you wish to use
-
-
-Context returned:
-
-* None
-
-
 ### local.LocalUploadBackend ###
 
 Stores the file locally, by default to `{MEDIA_ROOT}/uploads`.
@@ -183,6 +162,28 @@ Arguments
 
 * db (required): Specify the database within MongoDB you wish to use
 * collection (optional): Specify the collection within the db you wish to use. This is optional and will default to `fs` if not specified
+
+
+Context returned:
+
+* None
+
+
+### couch.CouchDBUploadBackend ###
+
+Stores the file in a CouchDB backend
+
+Requirements
+
+* [couchdb](http://code.google.com/p/couchdb-python/)
+
+Settings:
+
+* `AJAXUPLOAD_COUCHDB_HOST`: Specify the host of your CouchDB server. Defaults to `http://localhost:5984` if not specified.
+
+Arguments
+
+* db (required): Specify the database within CouchDB you wish to use
 
 
 Context returned:
