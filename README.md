@@ -5,6 +5,17 @@ https://github.com/alexkuhl/file-uploader
 
 In short, it implements a callable class, `AjaxFileUploader` that you can use to handle uploads. By default, `AjaxFileUploader` assumes you want to upload to local storage, but you can select any other backend if desired or write your own (see backends section below). Pull requests welcome!
 
+Updates
+=======
+
+Version 1.1.1 is released, and contains:
+
+* Support for a CouchDB backend
+* A backwards-incompatible change to the location of the ajaxuploader static files. I try to avoid backwards incompatibilities, but since /js and /css are the proper conventions and the lib is relatively young, it seemed better to get things right now, instead of waiting. The static files are now at:
+  * `{{STATIC_URL}}ajaxuploader/js/fileuploader.js`
+  * `{{STATIC_URL}}ajaxuploader/css/fileuploader.css`
+ 
+
 Usage
 =====
 Step 1. Install django-ajax-uploader. 
