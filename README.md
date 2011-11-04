@@ -283,6 +283,7 @@ Caveats
 
 Credits
 =======
+Original implementation and ongoing maintenance by [skoczen](https://github.com/skoczen), courtesy of [GoodCloud](https://www.agoodcloud.com).  
 Most of the backend abstraction was written by [chromano](https://github.com/chromano) and [shockflash](https://github.com/shockflash).  
 MongoDB support and saner defaults by [chrisjones-brack3t](https://github.com/chrisjones-brack3t).  
 Threadsafe improvements and bugfixes by [dwaiter](https://github.com/dwaiter).  
