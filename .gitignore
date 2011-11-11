@@ -3,4 +3,5 @@
 *.pyc
 *.pyo
 *.swp
+*~
 pip-log.txt
