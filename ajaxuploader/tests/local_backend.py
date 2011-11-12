@@ -15,7 +15,7 @@ class AjaxUploadTest(TestCase):
         super(AjaxUploadTest, self).setUp()
         
         self.test_dir = os.path.dirname(__file__)
-        test_file = open(os.path.join(self.test_dir, 'fixtures/pony.png'),
+        test_file = open(os.path.join(self.test_dir, '../fixtures/pony.png'),
                          'rb')
 
         self.test_file_1 = test_file
