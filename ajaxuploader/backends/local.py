@@ -1,28 +1,26 @@
+from io import FileIO, BufferedWriter
 import os
 
-from django.core.files.storage import default_storage
-from django.core.files.base import ContentFile
-from django.template.loader import render_to_string
+from django.conf import settings
 
 from ajaxuploader.backends.base import AbstractUploadBackend
 
-
 class LocalUploadBackend(AbstractUploadBackend):
-    UPLOAD_DIR = 'uploads'
+    UPLOAD_DIR = "uploads"
 
     def setup(self, filename):
-        # join UPLOAD_DIR with filename 
-        new_path = os.path.join(self.UPLOAD_DIR, filename)
-
-        # save empty file in default storage with path = new_path
-        self.path = default_storage.save(new_path, ContentFile(''))
-
-        # create BufferedWriter for new file
-        self._dest = default_storage.open(self.path, mode='wb')
+        self._path = os.path.join(
+            settings.MEDIA_ROOT, self.UPLOAD_DIR, filename)
+        try:
+            os.makedirs(os.path.realpath(os.path.dirname(self._path)))
+        except:
+            pass
+            self._dest = BufferedWriter(FileIO(self._path, "w"))
 
     def upload_chunk(self, chunk):
         self._dest.write(chunk)
 
     def upload_complete(self, request, filename):
+        path = settings.MEDIA_URL + self.UPLOAD_DIR + "/" + filename
         self._dest.close()
-        return {"path": self.path}
+        return {"path": path}
