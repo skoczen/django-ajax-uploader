@@ -1,1 +1,1 @@
-from ajaxuploader.tests.local_backend import *
+from ajaxuploader.tests.default_storage_backend import *

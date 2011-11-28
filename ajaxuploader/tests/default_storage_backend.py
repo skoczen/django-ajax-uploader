@@ -9,7 +9,7 @@ from django.core.urlresolvers import reverse
 
 
 class AjaxUploadTest(TestCase):
-    urls = 'ajaxuploader.urls'
+    urls = 'ajaxuploader.tests.urls'
 
     def setUp(self):
         super(AjaxUploadTest, self).setUp()
@@ -30,11 +30,11 @@ class AjaxUploadTest(TestCase):
         
     def tearDown(self):
         # remove created uploads/tests directory
-         rmtree(os.path.join(settings.MEDIA_ROOT, 'uploads/tests'))
-
+        rmtree(os.path.join(settings.MEDIA_ROOT, 'uploads/tests'))
+        
     def test_upload_raw_post_local_backend(self):
         """
-        tests uploading a file to LocalUploadBackend
+        tests uploading a file to DefaultStorageUploadBackend
         """
 
         # there is a bug in Django 1.3.1 with raw_post_data in the django test client
@@ -43,9 +43,10 @@ class AjaxUploadTest(TestCase):
 
         uploaded_file_name = 'tests/foo.png'
 
+        file_data = self.test_file_1.read()
         # post raw self.test_file_1 data to AjaxFileUploader as Ajax request
-        response = self.client.post(reverse('ajax-upload')+'?qqfile=%s' % \
-                                    uploaded_file_name, self.test_file_1.read(),
+        response = self.client.post(reverse('ajax-upload-default-storage')+'?qqfile=%s' % \
+                                    uploaded_file_name, file_data,
                                     content_type='application/octet-stream',
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
 
