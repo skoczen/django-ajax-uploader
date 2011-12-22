@@ -7,6 +7,11 @@ In short, it implements a callable class, `AjaxFileUploader` that you can use to
 
 Updates
 =======
+Version 1.2 (Not yet released) is planned. It will contain:
+	
+* Optional `fileLimit` param for the uploader, to limit the number of allowed files. (Thanks to qnub)
+* fhahn's `default_storage` backend.
+ 
 
 Version 1.1.1 is released, and contains:
 
