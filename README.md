@@ -287,7 +287,8 @@ Original implementation and ongoing maintenance by [skoczen](https://github.com/
 Most of the backend abstraction was written by [chromano](https://github.com/chromano) and [shockflash](https://github.com/shockflash).  
 MongoDB support and saner defaults by [chrisjones-brack3t](https://github.com/chrisjones-brack3t).  
 Threadsafe improvements and bugfixes by [dwaiter](https://github.com/dwaiter).  
-CouchDB support by [paepke](https://github.com/paepke).  
+CouchDB support by [paepke](https://github.com/paepke).
+File number limit in upload by [qnub](https://github.com/qnub)
 
 This code began as such a trivial layer on top of [valum's uploader](http://valums.com/ajax-upload/), [boto](https://github.com/boto/boto), and [alex's ideas](http://kuhlit.blogspot.com/2011/04/ajax-file-uploads-and-csrf-in-django-13.html) it's silly.  However, I didn't find any implementations that *just worked*, so hopefully it's useful to someone else.  I also drew from these sources:
 
