@@ -6,6 +6,9 @@
  * © 2011 Alex Kuhl (alexkuhl.org) 
  * 
  * Licensed under GNU GPL 2 or later, see license.txt.
+ *
+ * Source:
+ * https://github.com/GoodCloud/django-ajax-uploader/blob/master/ajaxuploader/static/ajaxuploader/js/fileuploader.js
  */    
 
 //
@@ -261,7 +264,8 @@ qq.FileUploaderBasic = function(o){
         // validation        
         allowedExtensions: [],               
         sizeLimit: 0,   
-        minSizeLimit: 0,                             
+        minSizeLimit: 0,
+        filesLimit: 0,
         // events
         // return false to cancel submit
         onSubmit: function(id, fileName){},
@@ -275,6 +279,7 @@ qq.FileUploaderBasic = function(o){
             sizeError: "{file} is too large, maximum file size is {sizeLimit}.",
             minSizeError: "{file} is too small, minimum file size is {minSizeLimit}.",
             emptyError: "{file} is empty, please select files again without it.",
+            filesLimitError: "Only {filesLimit} files upload allowed.",
             onLeave: "The files are being uploaded, if you leave now the upload will be cancelled."            
         },
         showMessage: function(message){
@@ -325,7 +330,7 @@ qq.FileUploaderBasic.prototype = {
         var handler = new qq[handlerClass]({
             debug: this._options.debug,
             action: this._options.action,         
-            maxConnections: this._options.maxConnections,   
+            maxConnections: this._options.maxConnections,
             onProgress: function(id, fileName, loaded, total){                
                 self._onProgress(id, fileName, loaded, total);
                 self._options.onProgress(id, fileName, loaded, total);                    
@@ -383,10 +388,12 @@ qq.FileUploaderBasic.prototype = {
         this._button.reset();   
     },  
     _uploadFileList: function(files){
+        var list_length = 0;
         for (var i=0; i<files.length; i++){
-            if ( !this._validateFile(files[i])){
+            if ( !this._validateFile(files[i], list_length)){
                 return;
-            }            
+            }
+            list_length++;
         }
         
         for (var i=0; i<files.length; i++){
@@ -402,7 +409,7 @@ qq.FileUploaderBasic.prototype = {
             this._handler.upload(id, this._options.params);
         }
     },      
-    _validateFile: function(file){
+    _validateFile: function(file, list_length){
         var name, size;
         
         if (file.value){
@@ -414,7 +421,7 @@ qq.FileUploaderBasic.prototype = {
             name = file.fileName != null ? file.fileName : file.name;
             size = file.fileSize != null ? file.fileSize : file.size;
         }
-                    
+
         if (! this._isAllowedExtension(name)){            
             this._error('typeError', name);
             return false;
@@ -430,6 +437,28 @@ qq.FileUploaderBasic.prototype = {
         } else if (size && size < this._options.minSizeLimit){
             this._error('minSizeError', name);
             return false;            
+        } else if (this._options.filesLimit){
+
+            if (list_length == undefined || list_length == NaN){
+                var list_length = 0;
+            }
+
+            if (this._handler._completed_files == undefined || this._handler._completed_files == NaN){
+                var completed_length = 0;
+            }else{
+                var completed_length = this._handler._completed_files.length;
+            }
+
+            if (this._handler._queue == undefined || this._handler._queue == NaN){
+                var queue_length = 0;
+            }else{
+                var queue_length = this._handler._queue.length;
+            }
+
+            if (this._options.filesLimit <= (completed_length + queue_length + list_length)){
+                this._error('filesLimitError', name);
+                return false;
+            }
         }
         
         return true;                
@@ -442,6 +471,7 @@ qq.FileUploaderBasic.prototype = {
         r('{extensions}', this._options.allowedExtensions.join(', '));
         r('{sizeLimit}', this._formatSize(this._options.sizeLimit));
         r('{minSizeLimit}', this._formatSize(this._options.minSizeLimit));
+        r('{filesLimit}', this._options.filesLimit);
         
         this._options.showMessage(message);                
     },
@@ -1282,3 +1312,4 @@ qq.extend(qq.UploadHandlerXhr.prototype, {
         }
     }
 });
+
