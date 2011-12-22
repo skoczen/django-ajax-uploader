@@ -279,7 +279,7 @@ qq.FileUploaderBasic = function(o){
             sizeError: "{file} is too large, maximum file size is {sizeLimit}.",
             minSizeError: "{file} is too small, minimum file size is {minSizeLimit}.",
             emptyError: "{file} is empty, please select files again without it.",
-            filesLimitError: "Only {filesLimit} files upload allowed.",
+            filesLimitError: "No more than {filesLimit} files are allowed to be uploaded.",
             onLeave: "The files are being uploaded, if you leave now the upload will be cancelled."            
         },
         showMessage: function(message){
