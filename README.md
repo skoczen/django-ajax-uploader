@@ -203,6 +203,24 @@ Context returned:
 * `path`: The full media path to the uploaded file.
 
 
+### default_storage.DefaultStorageUploadBackend ###
+
+This backend uses Django's default storage backend (defined by the  DEFAULT_FILE_STORAGE setting) to save the uploaded files.
+
+Requirements:
+
+* None
+
+Settings:
+
+* `UPLOAD_DIR` : The directory to store the uploaded file in, within `MEDIA_ROOT`. Defaults to "uploads".
+* `BUFFER_SIZE`: The size of each chunk to write. Defaults to 10 MB.  See the caveat at the bottom before changing it.
+
+Context returned:
+
+* `path`: The full media path to the uploaded file.
+
+
 Backend Usage
 ------------------------
 
