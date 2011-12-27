@@ -7,13 +7,13 @@ In short, it implements a callable class, `AjaxFileUploader` that you can use to
 
 Updates
 =======
-Version 1.2 (Not yet released) is planned. It will contain:
+Version 0.2 is released, and contains:
 	
 * Optional `fileLimit` param for the uploader, to limit the number of allowed files. (Thanks to qnub)
 * fhahn's `default_storage` backend.
  
 
-Version 1.1.1 is released, and contains:
+Version 0.1.1 is released, and contains:
 
 * Support for a CouchDB backend
 * A backwards-incompatible change to the location of the ajaxuploader static files. I try to avoid backwards incompatibilities, but since /js and /css are the proper conventions and the lib is relatively young, it seemed better to get things right now, instead of waiting. The static files are now at:
