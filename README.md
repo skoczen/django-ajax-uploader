@@ -26,6 +26,7 @@ Usage
 Step 1. Install django-ajax-uploader. 
 -------------------------------------
 It's in pypi now, so simply:
+
 - `pip install ajaxuploader`
 
 You may also need to install backend-specific dependences. 
