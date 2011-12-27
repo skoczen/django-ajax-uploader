@@ -5,3 +5,5 @@
 *.swp
 *~
 pip-log.txt
+dist
+ajaxuploader.egg-info

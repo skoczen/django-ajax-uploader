@@ -7,6 +7,10 @@ SOURCE_DIR = os.path.join(ROOT_DIR)
 
 setup(
     name = "ajaxuploader",
+    description = "AJAX file uploader for django",
+    author = "Steven Skoczen",
+    author_email = "steven@agoodcloud.com",
+    url = "https://github.com/GoodCloud/django-ajax-uploader",
     version = "0.2",
     packages = find_packages(),
     include_package_data=True,
