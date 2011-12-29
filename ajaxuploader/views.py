@@ -1,4 +1,5 @@
-import json
+from django.utils import simplejson as json
+from django.core.serializers.json import DjangoJSONEncoder
 
 from django.http import HttpResponse, HttpResponseBadRequest, Http404
 
@@ -58,4 +59,4 @@ class AjaxFileUploader(object):
             if extra_context is not None:
                 ret_json.update(extra_context)
 
-            return HttpResponse(json.dumps(ret_json))
+            return HttpResponse(json.dumps(ret_json, cls=DjangoJSONEncoder))
