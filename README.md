@@ -88,6 +88,29 @@ url(r'start$', views.start, name="start"),
 url(r'ajax-upload$', views.import_uploader, name="my_ajax_upload"),
 ```
 
+Or if you want to perform some pre-/post-processing on the ajax requests, you can use code similar to below:
+
+views.py
+
+```python
+@login_required
+def ajax_upload(request):
+    # confirm that this user is permitted to upload files
+    # ....
+    
+    # handle the upload using BaseAjaxFileUploader. We'll need to convert it
+    # to json later ourselves before returning it.
+    uploader = BaseAjaxFileUploader()
+    upload_response = uploader(request)
+    
+    if upload_response['success'] == True:
+    	# if the upload was successful, do something like save the path in a model
+    	# The filename is in upload_response['filename']
+    
+    # return the response as JSON
+    return HttpResponse(json.dumps(upload_response, cls=DjangoJSONEncoder))
+```
+
 Step 4. Set up your template.
 -----------------------------
 This sample is included in the templates directory, but at the minimum, you need:
