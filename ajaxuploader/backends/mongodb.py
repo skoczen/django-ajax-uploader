@@ -34,7 +34,7 @@ class MongoDBUploadBackend(AbstractUploadBackend):
         """
         host = getattr(settings, "AJAXUPLOAD_MONGODB_HOST", "localhost:27017")
         port = getattr(settings, "AJAXUPLOAD_MONGODB_PORT", 27017)
-        replicaset = getattr(settings, "AJAXUPLOAD_MONGODB_REPLICATSET", "")
+        replicaset = getattr(settings, "AJAXUPLOAD_MONGODB_REPLICASET", "")
 
         if isinstance(host, list):
             host = ", ".join(host)
