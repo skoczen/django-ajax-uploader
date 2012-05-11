@@ -7,8 +7,13 @@ import gridfs
 
 from ajaxuploader.backends.base import AbstractUploadBackend
 
-class MongoDBUploadBackend(AbstractUploadBackend):
 
+class MongoDBUploadBackend(AbstractUploadBackend):
+    """
+    Stores uploaded file in Mongo's GridFS.
+
+    Requirements: pymongo
+    """
     def __init__(self, *args, **kwargs):
         self.db = kwargs.pop('db')
 
@@ -27,10 +32,13 @@ class MongoDBUploadBackend(AbstractUploadBackend):
         Create new gridFS file which returns a GridIn instance to write
         data to.
         """
-        self.connection = Connection(
-            host=getattr(settings, 'AJAXUPLOAD_MONGODB_HOST', 'localhost'),
-            port=getattr(settings, 'AJAXUPLOAD_MONGODB_PORT', 27017)
-        )[self.db]
+        host = getattr(settings, "AJAXUPLOAD_MONGODB_HOST", "localhost:27017")
+        replicaset = getattr(settings, "AJAXUPLOAD_MONGODB_REPLICATSET", None)
+
+        if isinstance(host, list):
+            host = ", ".join(host)
+
+        self.connection = Connection(host, replicaset=replicaset)[self.db]
 
         if self.collection:
             self.grid = gridfs.GridFS(self.connection,
