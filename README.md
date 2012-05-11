@@ -175,8 +175,19 @@ Requirements
 
 Settings:
 
-* `AJAXUPLOAD_MONGODB_HOST`: Specify the host of your MongoDB server. Defaults to localhost if not specified.
-* `AJAXUPLOAD_MONGODB_PORT`: Specify the port of your MongoDB server. Defaults to 27017 if not specified.
+* `AJAXUPLOAD_MONGODB_HOST`: Specify either a single host:port or a list of host:port. Defaults to `"localhost:27017"`
+* `AJAXUPLOAD_MONGODB_PORT` (for backwards compatibility): Specify the port of your MongoDB server. Defaults to 27017 if not specified.
+* `AJAXUPLOAD_MONGODB_REPLICASET` (optional): Specify the name of your replicaset as a string. Defaults to an empty string.
+
+```python
+
+# Replicaset
+AJAXUPLOAD_MONGODB_HOST = ["127.0.0.1:27017", "127.0.0.1:27018"]
+AJAXUPLOAD_MONGODB_REPLICASET = "myset"
+
+# Standard
+AJASUPLOAD_MONGODB_HOST = "127.0.0.1:27017"
+```
 
 Arguments
 
