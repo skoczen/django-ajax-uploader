@@ -59,4 +59,4 @@ class AjaxFileUploader(object):
             if extra_context is not None:
                 ret_json.update(extra_context)
 
-            return HttpResponse(json.dumps(ret_json, cls=DjangoJSONEncoder))
+            return HttpResponse(json.dumps(ret_json, cls=DjangoJSONEncoder), content_type='application/json; charset=utf-8')
