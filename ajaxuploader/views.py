@@ -5,7 +5,11 @@ from django.http import HttpResponse, HttpResponseBadRequest, Http404
 
 from ajaxuploader.backends.local import LocalUploadBackend
 
-class AjaxFileUploader(object):
+class BaseAjaxFileUploader(object):
+    """
+    Performs an upload via AJAX then returns a dictionary which can be 
+    processed further on the server side.
+    """
     def __init__(self, backend=None, **kwargs):
         if backend is None:
             backend = LocalUploadBackend
@@ -59,4 +63,13 @@ class AjaxFileUploader(object):
             if extra_context is not None:
                 ret_json.update(extra_context)
 
-            return HttpResponse(json.dumps(ret_json, cls=DjangoJSONEncoder))
+            return ret_json
+
+class AjaxFileUploader(BaseAjaxFileUploader):
+    """
+    Subclass of BaseAjaxFileUploader that serialises the response from the
+    upload and returns it as an HttpResponse.
+    """
+    def _ajax_upload(self, request):
+        ret_json = super(AjaxFileUploader, self)._ajax_upload(request)
+        return HttpResponse(json.dumps(ret_json, cls=DjangoJSONEncoder))
