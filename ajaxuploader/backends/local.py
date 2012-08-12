@@ -5,6 +5,7 @@ from django.conf import settings
 
 from ajaxuploader.backends.base import AbstractUploadBackend
 
+
 class LocalUploadBackend(AbstractUploadBackend):
     UPLOAD_DIR = "uploads"
 
@@ -22,5 +23,40 @@ class LocalUploadBackend(AbstractUploadBackend):
 
     def upload_complete(self, request, filename):
         path = settings.MEDIA_URL + self.UPLOAD_DIR + "/" + filename
-        self._dest.close() 
+        self._dest.close()
         return {"path": path}
+
+    def update_filename(self, request, filename):
+        """
+        Returns a new name for the file being uploaded.
+        Ensure file with name doesn't exist, and if it does,
+        create a unique filename to avoid overwriting
+        """
+        self._dir = os.path.join(
+            settings.MEDIA_ROOT, self.UPLOAD_DIR)
+        unique_filename = False
+        filename_suffix = 0
+
+        print "orig filename: " + os.path.join(self._dir, filename)
+
+        # Check if file at filename exists
+        if os.path.isfile(os.path.join(self._dir, filename)):
+            while not unique_filename:
+                try:
+                    if filename_suffix == 0:
+                        open(os.path.join(self._dir, filename))
+                    else:
+                        filename_no_extension, extension = os.path.splitext(filename)
+                        print "filename all ready exists. Trying  " + filename_no_extension + str(filename_suffix) + extension
+                        open(os.path.join(self._dir, filename_no_extension + str(filename_suffix) + extension))
+                    filename_suffix += 1
+                except IOError:
+                    unique_filename = True
+
+        if filename_suffix == 0:
+            print "using filename: " + os.path.join(self._dir, filename)
+            return filename
+        else:
+            print "using filename: " + filename_no_extension + str(filename_suffix) + extension
+            return filename_no_extension + str(filename_suffix) + extension
+
