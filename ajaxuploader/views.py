@@ -11,7 +11,7 @@ class AjaxFileUploader(object):
             backend = LocalUploadBackend
         self.get_backend = lambda: backend(**kwargs)
 
-    def __call__(self,request):
+    def __call__(self, request, *args, **kwargs):
         return self._ajax_upload(request)
 
     def _ajax_upload(self, request):
