@@ -37,8 +37,6 @@ class LocalUploadBackend(AbstractUploadBackend):
         unique_filename = False
         filename_suffix = 0
 
-        print "orig filename: " + os.path.join(self._dir, filename)
-
         # Check if file at filename exists
         if os.path.isfile(os.path.join(self._dir, filename)):
             while not unique_filename:
@@ -47,16 +45,13 @@ class LocalUploadBackend(AbstractUploadBackend):
                         open(os.path.join(self._dir, filename))
                     else:
                         filename_no_extension, extension = os.path.splitext(filename)
-                        print "filename all ready exists. Trying  " + filename_no_extension + str(filename_suffix) + extension
                         open(os.path.join(self._dir, filename_no_extension + str(filename_suffix) + extension))
                     filename_suffix += 1
                 except IOError:
                     unique_filename = True
 
         if filename_suffix == 0:
-            print "using filename: " + os.path.join(self._dir, filename)
             return filename
         else:
-            print "using filename: " + filename_no_extension + str(filename_suffix) + extension
             return filename_no_extension + str(filename_suffix) + extension
 
