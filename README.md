@@ -258,6 +258,26 @@ Context returned:
 
 * `path`: The full media path to the uploaded file.
 
+### easy_thumbnails.EasyThumbnailUploadBackend ###
+
+Stores a thumbnail of the locally, optionally discarding the upload. Uses 'Easy Thumbnails' rather than sorl-thumbnail,
+which requires a key-value store. Subclasses `LocalUploadBackend`.
+
+Requirements:
+
+* [easy-thumbnails](https://github.com/SmileyChris/easy-thumbnails/)
+
+Settings:
+
+* `DIMENSIONS` : A tuple of the dimensions (WxH) to resize the uploaded image to. Defaults to "100x100"
+* `KEEP_ORIGINAL`: Whether to keep the originally uploaded file. Defaults to False.
+* `CROP`: Whether to create a 'cropped' version of the thumbnail. Defaults to True. 
+* `BUFFER_SIZE`: The size of each chunk to write. Defaults to 10 MB.
+
+Context returned:
+
+* `path`: The full media path to the uploaded file.
+
 
 ### default_storage.DefaultStorageUploadBackend ###
 
