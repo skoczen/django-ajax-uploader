@@ -40,9 +40,9 @@ You may also need to install backend-specific dependences.
  - For the S3 backend, you will need [boto](https://github.com/boto/boto).  ( `pip install boto` )
  - For the MongoDB GridFS backend, you will need [pymongo](https://github.com/AloneRoad/pymongo) ( `pip install pymongo` )
 
-Step 2. (Django 1.3 only)
+Step 2. (Django 1.3 and later)
 -------------------------
-For Django 1.3 you will need to have the app in your installed apps tuple for collect static to pick up the files.
+From Django 1.3 onwards you will need to have the app in your installed apps tuple for collect static to pick up the files.
 
 First Add 'ajaxuploader' to you installed apps in settings.py
 
@@ -158,7 +158,7 @@ Requirements:
 Settings:
 
 * `UPLOAD_DIR` : The directory to store the uploaded file in, within `MEDIA_ROOT`. Defaults to "uploads".
-* `BUFFER_SIZE`: The size of each chunk to write. Defaults to 10 MB.  See the caveat at the bottom before changing it.
+* `BUFFER_SIZE`: The size of each chunk to write. Defaults to 10 MB - i.e. `BUFFER_SIZE = 10485760`.  See the caveat at the bottom before changing it.
 
 Context returned:
 
