@@ -15,7 +15,7 @@ class DefaultStorageUploadBackend(AbstractUploadBackend):
     
     UPLOAD_DIR = 'uploads'
 
-    def setup(self, filename):
+    def setup(self, filename, *args, **kwargs):
         # join UPLOAD_DIR with filename 
         new_path = os.path.join(self.UPLOAD_DIR, filename)
 
@@ -25,9 +25,9 @@ class DefaultStorageUploadBackend(AbstractUploadBackend):
         # create BufferedWriter for new file
         self._dest = default_storage.open(self.path, mode='wb')
 
-    def upload_chunk(self, chunk):
+    def upload_chunk(self, chunk, *args, **kwargs):
         self._dest.write(chunk)
 
-    def upload_complete(self, request, filename):
+    def upload_complete(self, request, filename, *args, **kwargs):
         self._dest.close()
         return {"path": self.path}

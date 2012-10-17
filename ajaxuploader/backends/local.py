@@ -9,7 +9,7 @@ from ajaxuploader.backends.base import AbstractUploadBackend
 class LocalUploadBackend(AbstractUploadBackend):
     UPLOAD_DIR = "uploads"
 
-    def setup(self, filename):
+    def setup(self, filename, *args, **kwargs):
         self._path = os.path.join(
             settings.MEDIA_ROOT, self.UPLOAD_DIR, filename)
         try:
@@ -18,15 +18,15 @@ class LocalUploadBackend(AbstractUploadBackend):
             pass
         self._dest = BufferedWriter(FileIO(self._path, "w"))
 
-    def upload_chunk(self, chunk):
+    def upload_chunk(self, chunk, *args, **kwargs):
         self._dest.write(chunk)
 
-    def upload_complete(self, request, filename):
+    def upload_complete(self, request, filename, *args, **kwargs):
         path = settings.MEDIA_URL + self.UPLOAD_DIR + "/" + filename
         self._dest.close()
         return {"path": path}
 
-    def update_filename(self, request, filename):
+    def update_filename(self, request, filename, *args, **kwargs):
         """
         Returns a new name for the file being uploaded.
         Ensure file with name doesn't exist, and if it does,
