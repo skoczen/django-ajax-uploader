@@ -24,7 +24,7 @@ class MongoDBUploadBackend(AbstractUploadBackend):
 
         super(MongoDBUploadBackend, self).__init__(*args, **kwargs)
 
-    def setup(self, filename, encoding='UTF-8'):
+    def setup(self, filename, encoding='UTF-8', *args, **kwargs):
         """
         Setup MongoDB connection to specified db. Collection is optional
         and will default to fs if not specified.
@@ -57,8 +57,8 @@ class MongoDBUploadBackend(AbstractUploadBackend):
         self.f = self.grid.new_file(**{'filename': self._path,
             'encoding': 'UTF-8', 'content_type': content_type})
 
-    def upload_chunk(self, chunk):
+    def upload_chunk(self, chunk, *args, **kwargs):
         self.f.write(chunk)
 
-    def upload_complete(self, request, filename):
+    def upload_complete(self, request, filename, *args, **kwargs):
         self.f.close()

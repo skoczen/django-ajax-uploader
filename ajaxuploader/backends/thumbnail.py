@@ -9,7 +9,7 @@ class ThumbnailUploadBackend(LocalUploadBackend):
     DIMENSIONS = "100x100"
     KEEP_ORIGINAL = False
 
-    def upload_complete(self, request, filename):
+    def upload_complete(self, request, filename, *args, **kwargs):
         thumbnail = get_thumbnail(self._path, self.DIMENSIONS)
         if not self.KEEP_ORIGINAL:
             os.unlink(self._path)

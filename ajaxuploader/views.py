@@ -11,10 +11,10 @@ class AjaxFileUploader(object):
             backend = LocalUploadBackend
         self.get_backend = lambda: backend(**kwargs)
 
-    def __call__(self,request):
-        return self._ajax_upload(request)
+    def __call__(self, request, *args, **kwargs):
+        return self._ajax_upload(request, *args, **kwargs)
 
-    def _ajax_upload(self, request):
+    def _ajax_upload(self, request, *args, **kwargs):
         if request.method == "POST":
             if request.is_ajax():
                 # the file is stored raw in the request
@@ -46,13 +46,13 @@ class AjaxFileUploader(object):
             backend = self.get_backend()
 
             # custom filename handler
-            filename = (backend.update_filename(request, filename)
+            filename = (backend.update_filename(request, filename, *args, **kwargs)
                         or filename)
             # save the file
-            backend.setup(filename)
-            success = backend.upload(upload, filename, is_raw)
+            backend.setup(filename, *args, **kwargs)
+            success = backend.upload(upload, filename, is_raw, *args, **kwargs)
             # callback
-            extra_context = backend.upload_complete(request, filename)
+            extra_context = backend.upload_complete(request, filename, *args, **kwargs)
 
             # let Ajax Upload know whether we saved it or not
             ret_json = {'success': success, 'filename': filename}
