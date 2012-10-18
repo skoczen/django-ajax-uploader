@@ -352,7 +352,9 @@ File number limit in upload by [qnub](https://github.com/qnub).
 JSON parsing improvements by [onyxfish](https://github.com/onyxfish).  
 JSON content type added by [majdal](https://github.com/majdal).  
 Improvements to Local backend by [OnlyInAmerica](https://github.com/OnlyInAmerica).  
-Multiple upload improvements by [truetug](https://github.com/truetug).  
+Multiple upload improvements by [truetug](https://github.com/truetug).
+Better subclassable backends by [minddust](https://github.com/minddust).
+
 
 
 This code began as such a trivial layer on top of [valum's uploader](http://valums.com/ajax-upload/), [boto](https://github.com/boto/boto), and [alex's ideas](http://kuhlit.blogspot.com/2011/04/ajax-file-uploads-and-csrf-in-django-13.html) it's silly.  However, I didn't find any implementations that *just worked*, so hopefully it's useful to someone else.  I also drew from these sources:
