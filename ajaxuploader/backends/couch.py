@@ -33,17 +33,17 @@ class CouchDBUploadBackend(AbstractUploadBackend):
         
         super(CouchDBUploadBackend, self).__init__(*args, **kwargs)
 
-    def setup(self, filename):
+    def setup(self, filename, *args, **kwargs):
         self.connection = Server(getattr(settings,
                                          'AJAXUPLOAD_COUCHDB_HOST',
                                          'http://localhost:5984')
         )[self.database]
         self._dest = TemporaryFile()
 
-    def upload_chunk(self, chunk):
+    def upload_chunk(self, chunk, *args, **kwargs):
         self._dest.write(chunk)
 
-    def upload_complete(self, request, filename):
+    def upload_complete(self, request, filename, *args, **kwargs):
         self._dest.seek(0)
         doc_id = uuid4().hex
         # create doc by self defined uuid. We need the _rev for attachment
