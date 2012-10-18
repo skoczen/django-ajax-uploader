@@ -158,7 +158,7 @@ Requirements:
 Settings:
 
 * `UPLOAD_DIR` : The directory to store the uploaded file in, within `MEDIA_ROOT`. Defaults to "uploads".
-* `BUFFER_SIZE`: The size of each chunk to write. Defaults to 10 MB - i.e. `BUFFER_SIZE = 10485760`.  See the caveat at the bottom before changing it.
+* `BUFFER_SIZE`: The size in bytes of each chunk to write. Defaults to 10 MB; i.e. 10485760 bytes.  See the caveat at the bottom before changing it.
 
 Context returned:
 
