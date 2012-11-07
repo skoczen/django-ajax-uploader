@@ -41,7 +41,7 @@ You may also need to install backend-specific dependences.
  - For the MongoDB GridFS backend, you will need [pymongo](https://github.com/AloneRoad/pymongo) ( `pip install pymongo` )
 
 Step 2. (Django 1.3 and later)
--------------------------
+------------------------------
 From Django 1.3 onwards you will need to have the app in your installed apps tuple for collect static to pick up the files.
 
 First Add 'ajaxuploader' to you installed apps in settings.py
@@ -133,6 +133,17 @@ This sample is included in the templates directory, but at the minimum, you need
     </div>
 </body>
 </html>
+```
+
+
+If you want to use the latest version of [Fine Uploader](http://fineuploader.com/), as valum's `file-uploader` is now called, instead of the one bundled with `django-ajax-uploader`, you can do so by replacing the params arguments in the above template with the following customHeaders:
+
+```javascript
+                ...
+                customHeaders: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+                ...
 ```
 
 Backends
