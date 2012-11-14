@@ -59,4 +59,5 @@ class AjaxFileUploader(object):
             if extra_context is not None:
                 ret_json.update(extra_context)
 
-            return HttpResponse(json.dumps(ret_json, cls=DjangoJSONEncoder), content_type='application/json; charset=utf-8')
+            # although "application/json" is the correct content type, IE throws a fit
+            return HttpResponse(json.dumps(ret_json, cls=DjangoJSONEncoder), content_type='text/html; charset=utf-8')
