@@ -10,7 +10,7 @@ class LocalUploadBackend(AbstractUploadBackend):
     UPLOAD_DIR = "uploads"
 
     def setup(self, filename, *args, **kwargs):
-        self.UPLOAD_DIR = self.UPLOAD_DIR + '/'+ str(uuid.uuid4())
+        self.UPLOAD_DIR = self.UPLOAD_DIR + "/%s" % (uuid.uuid4())
         self._path = os.path.join(
             settings.MEDIA_ROOT, self.UPLOAD_DIR, filename)
         try:

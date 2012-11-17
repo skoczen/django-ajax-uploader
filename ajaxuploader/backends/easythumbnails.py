@@ -13,11 +13,10 @@ class EasyThumbnailUploadBackend(LocalUploadBackend):
     DETAIL = True
     SHARPEN = True
     UPSCALE = True
-
     def upload_complete(self, request, filename):
 
         options = {'size': self.DIMENSIONS, 'crop': self.CROP, 'quality': self.QUALITY,
-        			'detail': self.DETAIL, 'sharpen': self.SHARPEN, 'upscale':UPSCALE,}
+        			'detail': self.DETAIL, 'sharpen': self.SHARPEN,'upscale': self.UPSCALE,}
         thumb = get_thumbnailer(self._path).get_thumbnail(options)
 
         if not self.KEEP_ORIGINAL:
