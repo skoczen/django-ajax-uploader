@@ -22,4 +22,4 @@ class EasyThumbnailUploadBackend(LocalUploadBackend):
         if not self.KEEP_ORIGINAL:
             os.unlink(self._path)
 
-        return {"path": settings.MEDIA_URL + self.UPLOAD_DIR + '/' + os.path.split(thumb.path)[1]}
+        return {"path": self.UPLOAD_DIR + '/' + os.path.split(thumb.path)[1]}
