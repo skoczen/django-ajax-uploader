@@ -599,7 +599,10 @@ qq.extend(qq.FileUploader.prototype, {
                 qq.removeClass(dropArea, self._classes.dropActive);  
             },
             onDrop: function(e){
-                dropArea.style.display = 'none';
+                var dropAreas = qq.getByClass(document, self._classes.drop);
+                for (var i=0; i<dropAreas.length; i++) {
+                    dropAreas[i].style.display = 'none';
+                }
                 qq.removeClass(dropArea, self._classes.dropActive);
                 if( !self._options.multiple && e.dataTransfer.files.length > 1 )
                     alert( "Multiple file uploads are disabled." ) ;
