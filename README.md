@@ -135,6 +135,32 @@ This sample is included in the templates directory, but at the minimum, you need
 </html>
 ```
 
+Signals
+=======
+
+The signal `ajaxuploader.signals.file_uploaded` will be fired after a file has been sucessfully uploaded.
+
+Listener methods receives two arguments: the backend that stored the file, and the upload's request.
+
+::
+
+    from django.db import models
+    from django.dispatch import receiver
+
+    from ajaxuploader.views import AjaxFileUploader
+    from ajaxuploader.signals import file_uploaded
+
+
+    class MyModel(models.Model):
+        user = models.ForeignKey('auth.User')
+        document = models.FileField(upload_to='attachments/%Y/%m/%d')
+
+
+    @receiver(file_uploaded, sender=AjaxFileUploader)
+    def create_on_upload(sender, backend, request, **kwargs):
+        MyModel.objects.create(user=request.user, document=backend.path)
+
+
 Backends
 ========
 

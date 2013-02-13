@@ -1,9 +1,12 @@
 from django.utils import simplejson as json
+from django.core.files.base import File
 from django.core.serializers.json import DjangoJSONEncoder
 
 from django.http import HttpResponse, HttpResponseBadRequest, Http404, HttpResponseNotAllowed
 
 from ajaxuploader.backends.local import LocalUploadBackend
+from ajaxuploader.signals import file_uploaded
+
 
 class AjaxFileUploader(object):
     def __init__(self, backend=None, **kwargs):
@@ -51,6 +54,10 @@ class AjaxFileUploader(object):
             # save the file
             backend.setup(filename, *args, **kwargs)
             success = backend.upload(upload, filename, is_raw, *args, **kwargs)
+
+            if success:
+                file_uploaded.send(sender=self.__class__, backend=backend, request=request)
+
             # callback
             extra_context = backend.upload_complete(request, filename, *args, **kwargs)
 
