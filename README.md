@@ -142,8 +142,7 @@ The signal `ajaxuploader.signals.file_uploaded` will be fired after a file has b
 
 Listener methods receives two arguments: the backend that stored the file, and the upload's request.
 
-::
-
+```python
     from django.db import models
     from django.dispatch import receiver
 
@@ -159,7 +158,7 @@ Listener methods receives two arguments: the backend that stored the file, and t
     @receiver(file_uploaded, sender=AjaxFileUploader)
     def create_on_upload(sender, backend, request, **kwargs):
         MyModel.objects.create(user=request.user, document=backend.path)
-
+```
 
 Backends
 ========
