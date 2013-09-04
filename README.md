@@ -14,7 +14,7 @@ Version 0.2.1 is released, and contains:
 
 
 Version 0.2 is released, and contains:
-	
+    
 * Optional `fileLimit` param for the uploader, to limit the number of allowed files. (Thanks to qnub)
 * fhahn's `default_storage` backend.
  
@@ -27,8 +27,8 @@ Version 0.1.1 is released, and contains:
   * `{{STATIC_URL}}ajaxuploader/css/fileuploader.css`
  
 
-Usage
-=====
+Usage (standard, non-direct to s3 backends)
+===========================================
 Step 1. Install django-ajax-uploader. 
 -------------------------------------
 It's in pypi now, so simply:
@@ -37,7 +37,7 @@ It's in pypi now, so simply:
 
 You may also need to install backend-specific dependences. 
 
- - For the S3 backend, you will need [boto](https://github.com/boto/boto).  ( `pip install boto` )
+ - For the S3 backend or direct S3 uploads, you will need [boto](https://github.com/boto/boto).  ( `pip install boto` )
  - For the MongoDB GridFS backend, you will need [pymongo](https://github.com/AloneRoad/pymongo) ( `pip install pymongo` )
 
 Step 2. (Django 1.3 only)
@@ -79,7 +79,7 @@ def start(request):
         {'csrf_token': csrf_token}, context_instance = RequestContext(request))
 
 import_uploader = AjaxFileUploader()
-```	
+``` 
 
 urls.py 
 
@@ -95,11 +95,11 @@ This sample is included in the templates directory, but at the minimum, you need
 ```html
 <!doctype html>
     <head>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" ></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" ></script>
         <script src="{{ STATIC_URL }}ajaxuploader/js/fileuploader.js" ></script>
         <link href="{{ STATIC_URL }}ajaxuploader/css/fileuploader.css" media="screen" rel="stylesheet" type="text/css" />
         <script>
-        	$(function(){
+            $(function(){
             var uploader = new qq.FileUploader({
                 action: "{% url my_ajax_upload %}",
                 element: $('#file-uploader')[0],
@@ -122,7 +122,7 @@ This sample is included in the templates directory, but at the minimum, you need
                     'csrf_xname': 'X-CSRFToken',
                 },
             });
-	    	});
+            });
         </script>
     </head>
 <body>
@@ -134,6 +134,88 @@ This sample is included in the templates directory, but at the minimum, you need
 </body>
 </html>
 ```
+
+
+Usage (Direct to S3 uploads)
+===========================================
+
+Step 1. Install django-ajax-uploader and dependencies. 
+------------------------------------------------------
+Simply:
+
+- `pip install ajaxuploader boto`
+
+
+Step 2. Include it in your app's settings and urls
+--------------------------------------------------
+
+Add 'ajaxuploader' to you installed apps in settings.py
+
+```
+INSTALLED_APPS = (
+    ...
+    "ajaxuploader",
+)
+```
+
+In your urls.py, add:
+```python
+url(r'^ajax-uploader/', include('ajaxuploader.urls', namespace='ajaxuploader', app_name='ajaxuploader')),
+```
+
+Then:
+
+```
+$ python manage.py collectstatic
+```
+
+
+Step 4. Set up your template.
+-----------------------------
+This sample is included in the templates directory, but at the minimum, you need:
+
+```html
+<!doctype html>
+    <head>
+        <script src="{{ STATIC_URL }}ajaxuploader/js/fileuploader.js" ></script>
+        <link href="{{ STATIC_URL }}ajaxuploader/css/fileuploader.css" media="screen" rel="stylesheet" type="text/css" />
+        <script>
+            $(function(){
+            var uploader = new qq.FileUploader({
+                action: "{% url my_ajax_upload %}",
+                element: $('#file-uploader')[0],
+                multiple: true,
+                onComplete: function(id, fileName, responseJSON) {
+                    if(responseJSON.success) {
+                        alert("success!");
+                    } else {
+                        alert("upload failed!");
+                    }
+                },
+                onAllComplete: function(uploads) {
+                    // uploads is an array of maps
+                    // the maps look like this: {file: FileObject, response: JSONServerResponse}
+                    alert("All complete!");
+                },
+                params: {
+                    'csrf_token': '{{ csrf_token }}',
+                    'csrf_name': 'csrfmiddlewaretoken',
+                    'csrf_xname': 'X-CSRFToken',
+                },
+            });
+            });
+        </script>
+    </head>
+<body>
+    <div id="file-uploader">       
+        <noscript>          
+            <p>Please enable JavaScript to use file uploader.</p>
+        </noscript>         
+    </div>
+</body>
+</html>
+```
+
 
 Backends
 ========
@@ -341,7 +423,7 @@ Caveats
 
 Credits
 =======
-Original implementation and ongoing maintenance by [skoczen](https://github.com/skoczen), courtesy of [GoodCloud](https://www.agoodcloud.com).  
+Original implementation and ongoing maintenance by [skoczen](https://github.com/skoczen), courtesy of [GoodCloud](https://www.agoodcloud.com).
 Most of the backend abstraction was written by [chromano](https://github.com/chromano) and [shockflash](https://github.com/shockflash).  
 MongoDB support and saner defaults by [chrisjones-brack3t](https://github.com/chrisjones-brack3t).  
 Threadsafe improvements and bugfixes by [dwaiter](https://github.com/dwaiter).  
@@ -354,7 +436,7 @@ JSON content type added by [majdal](https://github.com/majdal).
 Improvements to Local backend by [OnlyInAmerica](https://github.com/OnlyInAmerica).  
 Multiple upload improvements by [truetug](https://github.com/truetug).
 Better subclassable backends by [minddust](https://github.com/minddust).
-
+Addition of direct S3 support by [skoczen](https://github.com/skoczen), courtesy of [GreenKahuna](https://www.greenkahuna.com).
 
 
 This code began as such a trivial layer on top of [valum's uploader](http://valums.com/ajax-upload/), [boto](https://github.com/boto/boto), and [alex's ideas](http://kuhlit.blogspot.com/2011/04/ajax-file-uploads-and-csrf-in-django-13.html) it's silly.  However, I didn't find any implementations that *just worked*, so hopefully it's useful to someone else.  I also drew from these sources:
