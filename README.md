@@ -19,7 +19,7 @@ Installation and Usage
 You have two basic ways to set up django-ajax-uploader.
 
 - If you want to handle the files yourself, follow the [Standard Instructions](https://github.com/goodcloud/django-ajax-uploader/#usage-standard-non-direct-to-s3-backends).
-- If you want to uplaod directly to s3, follow the [S3 Instructions](https://github.com/goodcloud/django-ajax-uploader/#usage-direct-to-s3-uploads).
+- If you want to upload directly to s3, follow the [S3 Instructions](https://github.com/goodcloud/django-ajax-uploader/#usage-direct-to-s3-uploads).
 
 
 
