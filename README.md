@@ -8,27 +8,24 @@ In short, it implements a callable class, `AjaxFileUploader` that you can use to
 Updates
 =======
 
-Version 0.2.1 is released, and contains:
+Version 0.3 is released, and contains:
 
-* JSON parsing of `extra_context` now properly handles datetimes. (Thanks to onyxfish)
+* Support for direct to s3 backends
 
 
-Version 0.2 is released, and contains:
-    
-* Optional `fileLimit` param for the uploader, to limit the number of allowed files. (Thanks to qnub)
-* fhahn's `default_storage` backend.
- 
+Installation and Usage
+======================
 
-Version 0.1.1 is released, and contains:
+You have two basic ways to set up django-ajax-uploader.
 
-* Support for a CouchDB backend
-* A backwards-incompatible change to the location of the ajaxuploader static files. I try to avoid backwards incompatibilities, but since /js and /css are the proper conventions and the lib is relatively young, it seemed better to get things right now, instead of waiting. The static files are now at:
-  * `{{STATIC_URL}}ajaxuploader/js/fileuploader.js`
-  * `{{STATIC_URL}}ajaxuploader/css/fileuploader.css`
- 
+- If you want to handle the files yourself, follow the [Standard Instructions](https://github.com/goodcloud/django-ajax-uploader/#usage-standard-non-direct-to-s3-backends).
+- If you want to uplaod directly to s3, follow the [S3 Instructions](https://github.com/goodcloud/django-ajax-uploader/#usage-direct-to-s3-uploads).
+
+
 
 Usage (standard, non-direct to s3 backends)
 ===========================================
+
 Step 1. Install django-ajax-uploader. 
 -------------------------------------
 It's in pypi now, so simply:
@@ -44,7 +41,7 @@ Step 2. (Django 1.3 only)
 -------------------------
 For Django 1.3 you will need to have the app in your installed apps tuple for collect static to pick up the files.
 
-First Add 'ajaxuploader' to you installed apps in settings.py
+First Add 'ajaxuploader' to your installed apps in settings.py
 
 ```
 INSTALLED_APPS = (
@@ -141,7 +138,6 @@ Usage (Direct to S3 uploads)
 
 Step 1. Install django-ajax-uploader and dependencies. 
 ------------------------------------------------------
-Simply:
 
 - `pip install ajaxuploader boto`
 
@@ -149,13 +145,13 @@ Simply:
 Step 2. Set up any necessary keys at AWS
 ----------------------------------------
 
-Fineuploader has a great [tutorial here](http://blog.fineuploader.com/2013/08/16/fine-uploader-s3-upload-directly-to-amazon-s3-from-your-browser/)
+Fineuploader has a great [tutorial here](http://blog.fineuploader.com/2013/08/16/fine-uploader-s3-upload-directly-to-amazon-s3-from-your-browser/).
 
 
 Step 3. Include it in your app's settings and urls
 --------------------------------------------------
 
-Add 'ajaxuploader' to you installed apps in settings.py
+Add 'ajaxuploader' to your installed apps in settings.py
 
 ```
 INSTALLED_APPS = (
@@ -187,18 +183,16 @@ $ python manage.py collectstatic
 Step 4. Set up your template.
 -----------------------------
 
-You can pretty much just use the same examples as are on fineuploader's site.  Make sure to pass in AWS_UPLOAD_CLIENT_KEY and AWS_UPLOAD_BUCKET_NAME to the template, and something like this should work:
+You can pretty much just use the same examples as are on fineuploader's site.  Make sure to pass in `AWS_UPLOAD_CLIENT_KEY` and `AWS_UPLOAD_BUCKET_NAME` to the template, and something like this should work:
 
 ```html
-GK.urls.ajax_uploader_signature = '';
-GK.urls.ajax_uploader_delete = ;
-GK.urls.ajax_uploader_success = ;
 <div id="fine_uploader"></div>
+
 <script>
 var uploader = new qq.s3.FineUploader({
     element: document.getElementById('fine_uploader'),
     request: {
-        endpoint: {{ AWS_UPLOAD_BUCKET_NAME }}+ '.s3.amazonaws.com',
+        endpoint: '{{ AWS_UPLOAD_BUCKET_NAME }}.s3.amazonaws.com',
         accessKey: AWS_CLIENT_ACCESS_KEY
     },
     signature: {
@@ -449,3 +443,25 @@ This code began as such a trivial layer on top of [valum's uploader](http://valu
 * https://github.com/alexkuhl/file-uploader
 
 Many thanks to all for writing such helpful and readable code!
+
+
+Past Update History
+===================
+
+Version 0.2.1 is released, and contains:
+
+* JSON parsing of `extra_context` now properly handles datetimes. (Thanks to onyxfish)
+
+
+Version 0.2 is released, and contains:
+    
+* Optional `fileLimit` param for the uploader, to limit the number of allowed files. (Thanks to qnub)
+* fhahn's `default_storage` backend.
+ 
+
+Version 0.1.1 is released, and contains:
+
+* Support for a CouchDB backend
+* A backwards-incompatible change to the location of the ajaxuploader static files. I try to avoid backwards incompatibilities, but since /js and /css are the proper conventions and the lib is relatively young, it seemed better to get things right now, instead of waiting. The static files are now at:
+  * `{{STATIC_URL}}ajaxuploader/js/fileuploader.js`
+  * `{{STATIC_URL}}ajaxuploader/css/fileuploader.css`
