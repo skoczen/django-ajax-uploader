@@ -1,18 +1,17 @@
 # Via Fine-uploader's server examples.
 # MIT License https://github.com/Widen/fine-uploader-server/blob/master/license.txt
 from django.conf import settings
-from django.http import HttpResponse, HttpRequest
+from django.http import HttpResponse
 from django.shortcuts import render
-from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 
-import base64, hmac, hashlib, json, sys
+import base64, hmac, hashlib, json
 
 try:
     import boto
     from boto.s3.connection import Key, S3Connection
     boto.set_stream_logger('boto')
-    S3 = S3Connection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+    S3 = S3Connection(settings.AWS_UPLOAD_CLIENT_KEY, settings.AWS_UPLOAD_CLIENT_SECRET_KEY)
 except ImportError, e:
     print("Could not import boto, the Amazon SDK for Python.")
     print("Deleting files will not work.")
@@ -26,12 +25,14 @@ def home(request):
     """
     return render(request, "index.html")
 
+
 @csrf_exempt
 def success_redirect_endpoint(request):
-    """ This is where the upload will snd a POST request after the 
+    """ This is where the upload will snd a POST request after the
     file has been stored in S3.
     """
     return make_response(200)
+
 
 @csrf_exempt
 def handle_s3(request):
@@ -45,6 +46,7 @@ def handle_s3(request):
     else:
         return HttpResponse(status=405)
 
+
 def handle_POST(request):
     """ Handle S3 uploader POST requests here. For files <=5MiB this is a simple
     request to sign the policy document. For files >5MiB this is a request
@@ -56,8 +58,8 @@ def handle_POST(request):
         request_payload = json.loads(request.body)
         headers = request_payload.get('headers', None)
         if headers:
-            # The presence of the 'headers' property in the request payload 
-            # means this is a request to sign a REST/multipart request 
+            # The presence of the 'headers' property in the request payload
+            # means this is a request to sign a REST/multipart request
             # and NOT a policy document
             response_data = sign_headers(headers)
         else:
@@ -93,9 +95,9 @@ def make_response(status=200, content=None):
 
 def is_valid_policy(policy_document):
     """ Verify the policy document has not been tampered with client-side
-    before sending it off. 
+    before sending it off.
     """
-    #bucket = settings.AWS_BUCKET_NAME
+    #bucket = settings.AWS_UPLOAD_BUCKET_NAME
     #parsed_max_size = settings.AWS_MAX_SIZE
     bucket = ''
     parsed_max_size = 0
@@ -107,7 +109,7 @@ def is_valid_policy(policy_document):
             if condition.get('bucket', None):
                 bucket = condition['bucket']
 
-    return bucket == settings.AWS_BUCKET_NAME and parsed_max_size == settings.AWS_MAX_SIZE
+    return bucket == settings.AWS_UPLOAD_BUCKET_NAME and parsed_max_size == settings.AWS_MAX_SIZE
 
 
 def sign_policy_document(policy_document):
@@ -115,14 +117,15 @@ def sign_policy_document(policy_document):
     http://aws.amazon.com/articles/1434/#signyours3postform
     """
     policy = base64.b64encode(json.dumps(policy_document))
-    signature = base64.b64encode(hmac.new(settings.AWS_CLIENT_SECRET_KEY, policy, hashlib.sha1).digest())
+    signature = base64.b64encode(hmac.new(settings.AWS_UPLOAD_CLIENT_SECRET_KEY, policy, hashlib.sha1).digest())
     return {
         'policy': policy,
         'signature': signature
     }
 
+
 def sign_headers(headers):
     """ Sign and return the headers for a chunked upload. """
     return {
-        'signature': base64.b64encode(hmac.new(settings.AWS_CLIENT_SECRET_KEY, headers, hashlib.sha1).digest())
+        'signature': base64.b64encode(hmac.new(settings.AWS_UPLOAD_CLIENT_SECRET_KEY, headers, hashlib.sha1).digest())
     }

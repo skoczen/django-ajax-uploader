@@ -146,7 +146,13 @@ Simply:
 - `pip install ajaxuploader boto`
 
 
-Step 2. Include it in your app's settings and urls
+Step 2. Set up any necessary keys at AWS
+----------------------------------------
+
+Fineuploader has a great [tutorial here](http://blog.fineuploader.com/2013/08/16/fine-uploader-s3-upload-directly-to-amazon-s3-from-your-browser/)
+
+
+Step 3. Include it in your app's settings and urls
 --------------------------------------------------
 
 Add 'ajaxuploader' to you installed apps in settings.py
@@ -156,6 +162,14 @@ INSTALLED_APPS = (
     ...
     "ajaxuploader",
 )
+```
+
+Also in settings, add the following: 
+
+```python
+AWS_UPLOAD_BUCKET_NAME = "bucket-to-upload-to"
+AWS_UPLOAD_CLIENT_KEY = "public-aws-upload-key"
+AWS_UPLOAD_CLIENT_SECRET_KEY = "secret-aws-upload-key"
 ```
 
 In your urls.py, add:
@@ -172,48 +186,36 @@ $ python manage.py collectstatic
 
 Step 4. Set up your template.
 -----------------------------
-This sample is included in the templates directory, but at the minimum, you need:
+
+You can pretty much just use the same examples as are on fineuploader's site.  Make sure to pass in AWS_UPLOAD_CLIENT_KEY and AWS_UPLOAD_BUCKET_NAME to the template, and something like this should work:
 
 ```html
-<!doctype html>
-    <head>
-        <script src="{{ STATIC_URL }}ajaxuploader/js/fileuploader.js" ></script>
-        <link href="{{ STATIC_URL }}ajaxuploader/css/fileuploader.css" media="screen" rel="stylesheet" type="text/css" />
-        <script>
-            $(function(){
-            var uploader = new qq.FileUploader({
-                action: "{% url my_ajax_upload %}",
-                element: $('#file-uploader')[0],
-                multiple: true,
-                onComplete: function(id, fileName, responseJSON) {
-                    if(responseJSON.success) {
-                        alert("success!");
-                    } else {
-                        alert("upload failed!");
-                    }
-                },
-                onAllComplete: function(uploads) {
-                    // uploads is an array of maps
-                    // the maps look like this: {file: FileObject, response: JSONServerResponse}
-                    alert("All complete!");
-                },
-                params: {
-                    'csrf_token': '{{ csrf_token }}',
-                    'csrf_name': 'csrfmiddlewaretoken',
-                    'csrf_xname': 'X-CSRFToken',
-                },
-            });
-            });
-        </script>
-    </head>
-<body>
-    <div id="file-uploader">       
-        <noscript>          
-            <p>Please enable JavaScript to use file uploader.</p>
-        </noscript>         
-    </div>
-</body>
-</html>
+GK.urls.ajax_uploader_signature = '';
+GK.urls.ajax_uploader_delete = ;
+GK.urls.ajax_uploader_success = ;
+<div id="fine_uploader"></div>
+<script>
+var uploader = new qq.s3.FineUploader({
+    element: document.getElementById('fine_uploader'),
+    request: {
+        endpoint: {{ AWS_UPLOAD_BUCKET_NAME }}+ '.s3.amazonaws.com',
+        accessKey: AWS_CLIENT_ACCESS_KEY
+    },
+    signature: {
+        endpoint: '{% url "ajaxuploader:s3_signature" %}'
+    },
+    uploadSuccess: {
+        endpoint: '{% url "ajaxuploader:s3_success" %}'
+    },
+    iframeSupport: {
+        localBlankPagePath: '/success.html'
+    },
+    deleteFile: {
+        enabled: true,
+        endpoint: '{% url "ajaxuploader:s3_delete" %}'
+    },
+});
+</script>
 ```
 
 
