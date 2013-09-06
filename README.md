@@ -1,7 +1,8 @@
 `django-ajax-uploader` provides a useful class you can use to easily implement ajax uploads.
 
-It uses valum's great uploader: https://github.com/valums/file-uploader, and draws heavy inspiration and some code from 
-https://github.com/alexkuhl/file-uploader
+It uses valum's great uploader: https://github.com/valums/file-uploader, and draws heavy inspiration and some code from https://github.com/alexkuhl/file-uploader.
+
+You can also use [fineuploader](http://fineuploader.com/), the commercial/open source project that sprung out of valum's original work. It's great, and highly recommended. 
 
 In short, it implements a callable class, `AjaxFileUploader` that you can use to handle uploads. By default, `AjaxFileUploader` assumes you want to upload to local storage, but you can select any other backend if desired or write your own (see backends section below). Pull requests welcome!
 
@@ -11,7 +12,7 @@ Updates
 Version 0.3 is released, and contains:
 
 * Support for direct to s3 backends
-
+* Official deprecation of the included fileuploader.js.  Please use [fineuploader](http://fineuploader.com/) going forward.
 
 Installation and Usage
 ======================
