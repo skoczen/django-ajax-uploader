@@ -2,7 +2,6 @@ import os
 
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
-from django.template.loader import render_to_string
 
 from ajaxuploader.backends.base import AbstractUploadBackend
 
