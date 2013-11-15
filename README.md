@@ -434,6 +434,7 @@ Improvements to Local backend by [OnlyInAmerica](https://github.com/OnlyInAmeric
 Multiple upload improvements by [truetug](https://github.com/truetug).
 Better subclassable backends by [minddust](https://github.com/minddust).
 Addition of direct S3 support by [skoczen](https://github.com/skoczen), courtesy of [GreenKahuna](https://www.greenkahuna.com).
+JSON import bug fixed by [lazerscience](https://github.com/lazerscience)
 
 
 This code began as such a trivial layer on top of [valum's uploader](http://valums.com/ajax-upload/), [boto](https://github.com/boto/boto), and [alex's ideas](http://kuhlit.blogspot.com/2011/04/ajax-file-uploads-and-csrf-in-django-13.html) it's silly.  However, I didn't find any implementations that *just worked*, so hopefully it's useful to someone else.  I also drew from these sources:
