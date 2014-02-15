@@ -62,3 +62,5 @@ class MongoDBUploadBackend(AbstractUploadBackend):
 
     def upload_complete(self, request, filename, *args, **kwargs):
         self.f.close()
+        # provide a string representation of the GridFS File ObjectId
+        return {'_id': str(self.f._id)}
