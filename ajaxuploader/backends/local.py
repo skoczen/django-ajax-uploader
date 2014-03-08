@@ -7,7 +7,8 @@ from ajaxuploader.backends.base import AbstractUploadBackend
 
 
 class LocalUploadBackend(AbstractUploadBackend):
-    UPLOAD_DIR = "uploads"
+    UPLOAD_DIR = getattr(settings, "UPLOAD_DIR", "uploads")
+
 
     def setup(self, filename, *args, **kwargs):
         self._path = os.path.join(
