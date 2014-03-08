@@ -434,12 +434,15 @@ Improvements to Local backend by [OnlyInAmerica](https://github.com/OnlyInAmeric
 Multiple upload improvements by [truetug](https://github.com/truetug).
 Better subclassable backends by [minddust](https://github.com/minddust).
 Addition of direct S3 support by [skoczen](https://github.com/skoczen), courtesy of [GreenKahuna](https://www.greenkahuna.com).
-JSON import bug fixed by [lazerscience](https://github.com/lazerscience)
-EasyThumbnail backend rename by [michel54 and a rather annoyed crowd](https://github.com/GoodCloud/django-ajax-uploader/pull/35)
-Saner s3 checking by [aalebedev](https://github.com/aalebedev)
-MongoDB improvements on upload by [dannybrowne86](https://github.com/dannybrowne86)
-Respecting django's UPLOAD_DIR by [dotcom900825](https://github.com/dotcom900825)
 
+0.3.5
+
+* JSON import bug fixed by [lazerscience](https://github.com/lazerscience)
+* EasyThumbnail backend rename by [michel54 and a rather annoyed crowd](https://github.com/GoodCloud/django-ajax-* uploader/pull/35)
+* Saner s3 checking by [aalebedev](https://github.com/aalebedev)
+* MongoDB improvements on upload by [dannybrowne86](https://github.com/dannybrowne86)
+* Respecting django's UPLOAD_DIR by [dotcom900825](https://github.com/dotcom900825)
+* Callable upload_dir by [fcurella](https://github.com/fcurella)
 
 This code began as such a trivial layer on top of [valum's uploader](http://valums.com/ajax-upload/), [boto](https://github.com/boto/boto), and [alex's ideas](http://kuhlit.blogspot.com/2011/04/ajax-file-uploads-and-csrf-in-django-13.html) it's silly.  However, I didn't find any implementations that *just worked*, so hopefully it's useful to someone else.  I also drew from these sources:
 
