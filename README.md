@@ -422,6 +422,32 @@ To write a custom backend, simply inherit from `backends.base.AbstractUploadBack
 * `upload_complete`: receives the `request` object and the filename post `update_filename` and does any cleanup or manipulation after the upload is complete.  (Examples:  cropping the image, disconnecting from the server).  If a dict is returned, it is used to update the response returned to the client.
 
 
+Signals
+=======
+
+The signal `ajaxuploader.signals.file_uploaded` will be fired after a file has been sucessfully uploaded.
+
+Listener methods receives two arguments: the backend that stored the file, and the upload's request.
+
+```python
+    from django.db import models
+    from django.dispatch import receiver
+
+    from ajaxuploader.views import AjaxFileUploader
+    from ajaxuploader.signals import file_uploaded
+
+
+    class MyModel(models.Model):
+        user = models.ForeignKey('auth.User')
+        document = models.FileField(upload_to='attachments/%Y/%m/%d')
+
+
+    @receiver(file_uploaded, sender=AjaxFileUploader)
+    def create_on_upload(sender, backend, request, **kwargs):
+        MyModel.objects.create(user=request.user, document=backend.path)
+```
+
+
 Caveats
 =======
 `BUFFER_SIZE` - some users have reported problems using smaller buffer sizes.  I also saw random failed uploads with very small sizes like 32k.  10MB has been completely reliable for me, and in what I've read here and there, so do some testing if you want to try a different value.  Note that this doesn't have a big impact on the overall upload speed.
@@ -455,6 +481,8 @@ Addition of direct S3 support by [skoczen](https://github.com/skoczen), courtesy
 * Documentation improvements by [worldofchris](https://github.com/worldofchris)
 * Directory traversal security fix by [hschmitt](https://github.com/hschmitt)
 * Ability to clear all drop areas by [minddust](https://github.com/minddust)
+* file_uplaoded signal fires by [fcurella](https://github.com/fcurella)
+
 
 This code began as such a trivial layer on top of [valum's uploader](http://valums.com/ajax-upload/), [boto](https://github.com/boto/boto), and [alex's ideas](http://kuhlit.blogspot.com/2011/04/ajax-file-uploads-and-csrf-in-django-13.html) it's silly.  However, I didn't find any implementations that *just worked*, so hopefully it's useful to someone else.  I also drew from these sources:
 
