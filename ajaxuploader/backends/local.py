@@ -1,6 +1,6 @@
 from io import FileIO, BufferedWriter
 import os
-
+import uuid
 from django.conf import settings
 
 from ajaxuploader.backends.base import AbstractUploadBackend
@@ -10,6 +10,7 @@ class LocalUploadBackend(AbstractUploadBackend):
     UPLOAD_DIR = "uploads"
 
     def setup(self, filename, *args, **kwargs):
+        self.UPLOAD_DIR = self.UPLOAD_DIR + "/%s" % (uuid.uuid4())
         self._path = os.path.join(
             settings.MEDIA_ROOT, self.UPLOAD_DIR, filename)
         try:
