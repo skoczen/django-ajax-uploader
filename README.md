@@ -337,7 +337,7 @@ Context returned:
 
 * `path`: The full media path to the uploaded file.
 
-### easy_thumbnails.EasyThumbnailUploadBackend ###
+### easythumbnails.EasyThumbnailUploadBackend ###
 
 Stores a thumbnail of the locally, optionally discarding the upload. Uses 'Easy Thumbnails' rather than sorl-thumbnail,
 which requires a key-value store. Subclasses `LocalUploadBackend`.

@@ -5,8 +5,9 @@ from easy_thumbnails.files import get_thumbnailer
 
 from ajaxuploader.backends.local import LocalUploadBackend
 
+
 class EasyThumbnailUploadBackend(LocalUploadBackend):
-    DIMENSIONS = (100,000)
+    DIMENSIONS = (100, 000)
     CROP = True
     KEEP_ORIGINAL = False
 
