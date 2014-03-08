@@ -38,11 +38,9 @@ You may also need to install backend-specific dependences.
  - For the S3 backend or direct S3 uploads, you will need [boto](https://github.com/boto/boto).  ( `pip install boto` )
  - For the MongoDB GridFS backend, you will need [pymongo](https://github.com/AloneRoad/pymongo) ( `pip install pymongo` )
 
-Step 2. (Django 1.3 only)
+Step 2. (Django 1.3+)
 -------------------------
-For Django 1.3 you will need to have the app in your installed apps tuple for collect static to pick up the files.
-
-First Add 'ajaxuploader' to your installed apps in settings.py
+Add 'ajaxuploader' to your installed apps in settings.py:
 
 ```
 INSTALLED_APPS = (
@@ -133,6 +131,17 @@ This sample is included in the templates directory, but at the minimum, you need
 </html>
 ```
 
+
+ If you want to use the latest version of [Fine Uploader](http://fineuploader.com/), as valum's `file-uploader` is now called, instead of the one bundled with `django-ajax-uploader`, you can do so by replacing the params arguments in the above template with the following customHeaders:
+ 
+ ```javascript
+                 ...
+                 customHeaders: {
+                     'X-CSRFToken': '{{ csrf_token }}',
+                 },
+                 ...
+ ```
+ 
 
 Usage (Direct to S3 uploads)
 ===========================================
@@ -369,7 +378,7 @@ Requirements:
 Settings:
 
 * `UPLOAD_DIR` : The directory to store the uploaded file in, within `MEDIA_ROOT`. Defaults to "uploads".
-* `BUFFER_SIZE`: The size of each chunk to write. Defaults to 10 MB.  See the caveat at the bottom before changing it.
+* `BUFFER_SIZE`: The size in bytes of each chunk to write. Defaults to 10 MB; i.e. 10485760 bytes.  See the caveat at the bottom before changing it.
 
 Context returned:
 
@@ -443,6 +452,7 @@ Addition of direct S3 support by [skoczen](https://github.com/skoczen), courtesy
 * MongoDB improvements on upload by [dannybrowne86](https://github.com/dannybrowne86)
 * Respecting django's UPLOAD_DIR by [dotcom900825](https://github.com/dotcom900825)
 * Callable upload_dir by [fcurella](https://github.com/fcurella)
+* Documentation improvements by [worldofchris](https://github.com/worldofchris)
 
 This code began as such a trivial layer on top of [valum's uploader](http://valums.com/ajax-upload/), [boto](https://github.com/boto/boto), and [alex's ideas](http://kuhlit.blogspot.com/2011/04/ajax-file-uploads-and-csrf-in-django-13.html) it's silly.  However, I didn't find any implementations that *just worked*, so hopefully it's useful to someone else.  I also drew from these sources:
 
