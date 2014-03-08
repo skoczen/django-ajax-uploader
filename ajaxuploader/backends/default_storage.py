@@ -1,3 +1,4 @@
+import datetime
 import os
 
 from django.conf import settings
@@ -18,7 +19,7 @@ class DefaultStorageUploadBackend(AbstractUploadBackend):
     def _get_upload_dir(self):
         if callable(self.UPLOAD_DIR):
             return self.UPLOAD_DIR()
-        return self.UPLOAD_DIR
+        return datetime.datetime.now().strftime(self.UPLOAD_DIR)
 
     def setup(self, filename, *args, **kwargs):
         # join UPLOAD_DIR with filename.
