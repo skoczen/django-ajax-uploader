@@ -33,6 +33,7 @@ class LocalUploadBackend(AbstractUploadBackend):
         Ensure file with name doesn't exist, and if it does,
         create a unique filename to avoid overwriting
         """
+        filename = os.path.basename(filename)
         self._dir = os.path.join(
             settings.MEDIA_ROOT, self.UPLOAD_DIR)
         unique_filename = False
