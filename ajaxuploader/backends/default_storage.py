@@ -1,4 +1,5 @@
 import os
+import datetime
 
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
@@ -14,9 +15,14 @@ class DefaultStorageUploadBackend(AbstractUploadBackend):
     
     UPLOAD_DIR = 'uploads'
 
+    def get_upload_dir(self):
+        if callable(self.UPLOAD_DIR):
+            return self.UPLOAD_DIR()
+        return datetime.datetime.now().strftime(self.UPLOAD_DIR)
+
     def setup(self, filename, *args, **kwargs):
         # join UPLOAD_DIR with filename 
-        new_path = os.path.join(self.UPLOAD_DIR, filename)
+        new_path = os.path.join(self.get_upload_dir(), filename)
 
         # save empty file in default storage with path = new_path
         self.path = default_storage.save(new_path, ContentFile(''))
