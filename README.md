@@ -453,6 +453,8 @@ Addition of direct S3 support by [skoczen](https://github.com/skoczen), courtesy
 * Respecting django's UPLOAD_DIR by [dotcom900825](https://github.com/dotcom900825)
 * Callable upload_dir by [fcurella](https://github.com/fcurella)
 * Documentation improvements by [worldofchris](https://github.com/worldofchris)
+* Directory traversal security fix by [hschmitt](https://github.com/hschmitt)
+* Ability to clear all drop areas by [minddust](https://github.com/minddust)
 
 This code began as such a trivial layer on top of [valum's uploader](http://valums.com/ajax-upload/), [boto](https://github.com/boto/boto), and [alex's ideas](http://kuhlit.blogspot.com/2011/04/ajax-file-uploads-and-csrf-in-django-13.html) it's silly.  However, I didn't find any implementations that *just worked*, so hopefully it's useful to someone else.  I also drew from these sources:
 
