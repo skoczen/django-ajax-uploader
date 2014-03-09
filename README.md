@@ -484,6 +484,11 @@ Addition of direct S3 support by [skoczen](https://github.com/skoczen), courtesy
 * file_uplaoded signal fires by [fcurella](https://github.com/fcurella)
 * More bugfixes by [fcurella](https://github.com/fcurella)
 
+0.3.6
+
+* More robust handling of fineuploader vs valum's by [mbaechtold](https://github.com/mbaechtold)
+
+
 This code began as such a trivial layer on top of [valum's uploader](http://valums.com/ajax-upload/), [boto](https://github.com/boto/boto), and [alex's ideas](http://kuhlit.blogspot.com/2011/04/ajax-file-uploads-and-csrf-in-django-13.html) it's silly.  However, I didn't find any implementations that *just worked*, so hopefully it's useful to someone else.  I also drew from these sources:
 
 * http://www.topfstedt.de/weblog/?p=558

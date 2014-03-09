@@ -30,7 +30,10 @@ class AjaxFileUploader(object):
                 # AJAX Upload will pass the filename in the querystring if it
                 # is the "advanced" ajax upload
                 try:
-                    filename = request.GET['qqfile']
+                    if 'qqfile' in request.GET:
+                        filename = request.GET['qqfile']
+                    else:
+                        filename = request.REQUEST['qqfilename']
                 except KeyError:
                     return HttpResponseBadRequest("AJAX request not valid")
             # not an ajax upload, so it was the "basic" iframe version with
