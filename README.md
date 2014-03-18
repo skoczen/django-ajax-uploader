@@ -384,6 +384,17 @@ Context returned:
 
 * `path`: The full media path to the uploaded file.
 
+Example Usage:
+
+```python
+
+#views.py
+from ajaxuploader.views import AjaxFileUploader
+from ajaxuploader.backends.easythumbnails import EasyThumbnailUploadBackend
+
+import_uploader = AjaxFileUploader(UPLOAD_DIR='my_upload', backend=EasyThumbnailUploadBackend, DIMENSIONS=(250, 250)) 
+```
+
 
 Backend Usage
 ------------------------
