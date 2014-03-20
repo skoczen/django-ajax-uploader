@@ -9,7 +9,7 @@ In short, it implements a callable class, `AjaxFileUploader` that you can use to
 Updates
 =======
 
-Version 0.3 is released, and contains:
+Version 0.3.x is released, and contains:
 
 * Support for direct to s3 backends
 * Official deprecation of the included fileuploader.js.  Please use [fineuploader](http://fineuploader.com/) going forward.
@@ -464,22 +464,19 @@ Caveats
 `BUFFER_SIZE` - some users have reported problems using smaller buffer sizes.  I also saw random failed uploads with very small sizes like 32k.  10MB has been completely reliable for me, and in what I've read here and there, so do some testing if you want to try a different value.  Note that this doesn't have a big impact on the overall upload speed.
 
 
-Credits
-=======
-Original implementation and ongoing maintenance by [skoczen](https://github.com/skoczen), courtesy of [GoodCloud](https://www.agoodcloud.com).
-Most of the backend abstraction was written by [chromano](https://github.com/chromano) and [shockflash](https://github.com/shockflash).  
-MongoDB support and saner defaults by [chrisjones-brack3t](https://github.com/chrisjones-brack3t).  
-Threadsafe improvements and bugfixes by [dwaiter](https://github.com/dwaiter).  
-CouchDB support by [paepke](https://github.com/paepke). 
-Default Storage backend by [fhahn](https://github.com/fhahn).  
-EasyThumbnail backend by [Miserlou](https://github.com/Miserlou).  
-File number limit in upload by [qnub](https://github.com/qnub).  
-JSON parsing improvements by [onyxfish](https://github.com/onyxfish).  
-JSON content type added by [majdal](https://github.com/majdal).  
-Improvements to Local backend by [OnlyInAmerica](https://github.com/OnlyInAmerica).  
-Multiple upload improvements by [truetug](https://github.com/truetug).
-Better subclassable backends by [minddust](https://github.com/minddust).
-Addition of direct S3 support by [skoczen](https://github.com/skoczen), courtesy of [GreenKahuna](https://www.greenkahuna.com).
+Credits and Updates
+===================
+
+Many thanks to all for writing such helpful and readable code!
+
+
+0.3.7
+
+* Fixes to `UPLOAD_DIR` handling and docs by [dogstick](https://github.com/dogstick)
+
+0.3.6
+
+* More robust handling of fineuploader vs valum's by [mbaechtold](https://github.com/mbaechtold)
 
 0.3.5
 
@@ -495,10 +492,23 @@ Addition of direct S3 support by [skoczen](https://github.com/skoczen), courtesy
 * file_uplaoded signal fires by [fcurella](https://github.com/fcurella)
 * More bugfixes by [fcurella](https://github.com/fcurella)
 
-0.3.6
 
-* More robust handling of fineuploader vs valum's by [mbaechtold](https://github.com/mbaechtold)
+Long before I switched to this update format:
 
+Original implementation and ongoing maintenance by [skoczen](https://github.com/skoczen), courtesy of [GoodCloud](https://www.agoodcloud.com).
+Most of the backend abstraction was written by [chromano](https://github.com/chromano) and [shockflash](https://github.com/shockflash).  
+MongoDB support and saner defaults by [chrisjones-brack3t](https://github.com/chrisjones-brack3t).  
+Threadsafe improvements and bugfixes by [dwaiter](https://github.com/dwaiter).  
+CouchDB support by [paepke](https://github.com/paepke). 
+Default Storage backend by [fhahn](https://github.com/fhahn).  
+EasyThumbnail backend by [Miserlou](https://github.com/Miserlou).  
+File number limit in upload by [qnub](https://github.com/qnub).  
+JSON parsing improvements by [onyxfish](https://github.com/onyxfish).  
+JSON content type added by [majdal](https://github.com/majdal).  
+Improvements to Local backend by [OnlyInAmerica](https://github.com/OnlyInAmerica).  
+Multiple upload improvements by [truetug](https://github.com/truetug).
+Better subclassable backends by [minddust](https://github.com/minddust).
+Addition of direct S3 support by [skoczen](https://github.com/skoczen), courtesy of [GreenKahuna](https://www.greenkahuna.com).
 
 This code began as such a trivial layer on top of [valum's uploader](http://valums.com/ajax-upload/), [boto](https://github.com/boto/boto), and [alex's ideas](http://kuhlit.blogspot.com/2011/04/ajax-file-uploads-and-csrf-in-django-13.html) it's silly.  However, I didn't find any implementations that *just worked*, so hopefully it's useful to someone else.  I also drew from these sources:
 
@@ -507,18 +517,11 @@ This code began as such a trivial layer on top of [valum's uploader](http://valu
 * https://github.com/valums/file-uploader
 * https://github.com/alexkuhl/file-uploader
 
-0.3.7
 
-* Fixes to `UPLOAD_DIR` handling and docs by [dogstick](https://github.com/dogstick)
+Past Release History / API Changes
+==================================
 
-
-Many thanks to all for writing such helpful and readable code!
-
-
-Past Update History
-===================
-
-Version 0.3.5. is released, with the following backward incompababile changes:
+Version 0.3.5 is released, with the following backward incompababile changes:
 
 * The EasyThumbnail backend now lives in `easythumbnails.py`, instead of `easy_thumbnails.py`. 
 
