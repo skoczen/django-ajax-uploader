@@ -507,6 +507,11 @@ This code began as such a trivial layer on top of [valum's uploader](http://valu
 * https://github.com/valums/file-uploader
 * https://github.com/alexkuhl/file-uploader
 
+0.3.7
+
+* Fixes to `UPLOAD_DIR` handling and docs by [dogstick](https://github.com/dogstick)
+
+
 Many thanks to all for writing such helpful and readable code!
 
 
