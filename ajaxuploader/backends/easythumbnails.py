@@ -7,7 +7,7 @@ from ajaxuploader.backends.local import LocalUploadBackend
 
 
 class EasyThumbnailUploadBackend(LocalUploadBackend):
-    DIMENSIONS = (100, 000)
+    DIMENSIONS = (100, 100)
     CROP = True
     KEEP_ORIGINAL = False
 
@@ -19,4 +19,4 @@ class EasyThumbnailUploadBackend(LocalUploadBackend):
         if not self.KEEP_ORIGINAL:
             os.unlink(self._path)
 
-        return {"path": settings.MEDIA_URL + os.path.split(thumb.path)[1]}
+        return {"path": settings.MEDIA_URL + self.UPLOAD_DIR + '/' + os.path.split(thumb.path)[1]}
