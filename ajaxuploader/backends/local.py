@@ -57,3 +57,9 @@ class LocalUploadBackend(AbstractUploadBackend):
         else:
             return filename_no_extension + str(filename_suffix) + extension
 
+    @property
+    def path(self):
+        """
+        Return a path of file uploaded
+        """
+        return self._path
