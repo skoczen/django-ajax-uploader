@@ -13,7 +13,7 @@ if hasattr(settings, "AWS_UPLOAD_CLIENT_KEY") and hasattr(settings, "AWS_UPLOAD_
         from boto.s3.connection import Key, S3Connection
         boto.set_stream_logger('boto')
         S3 = S3Connection(settings.AWS_UPLOAD_CLIENT_KEY, settings.AWS_UPLOAD_CLIENT_SECRET_KEY)
-    except ImportError, e:
+    except ImportError as e:
         print("Could not import boto, the Amazon SDK for Python.")
         print("Deleting files will not work.")
         print("Install boto with")
