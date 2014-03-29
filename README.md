@@ -469,6 +469,10 @@ Credits and Updates
 
 Many thanks to all for writing such helpful and readable code!
 
+0.3.8
+
+* `backends.path` property added by [gilsondev](https://github.com/gilsondev)
+* python3 exception fix by [eryckson](https://github.com/eryckson)
 
 0.3.7
 
@@ -499,7 +503,7 @@ Original implementation and ongoing maintenance by [skoczen](https://github.com/
 Most of the backend abstraction was written by [chromano](https://github.com/chromano) and [shockflash](https://github.com/shockflash).  
 MongoDB support and saner defaults by [chrisjones-brack3t](https://github.com/chrisjones-brack3t).  
 Threadsafe improvements and bugfixes by [dwaiter](https://github.com/dwaiter).  
-CouchDB support by [paepke](https://github.com/paepke). 
+CouchDB support by [paepke](https://github.com/paepke).
 Default Storage backend by [fhahn](https://github.com/fhahn).  
 EasyThumbnail backend by [Miserlou](https://github.com/Miserlou).  
 File number limit in upload by [qnub](https://github.com/qnub).  
