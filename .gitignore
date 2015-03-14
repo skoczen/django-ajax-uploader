@@ -8,3 +8,6 @@ pip-log.txt
 dist
 ajaxuploader.egg-info
 build
+static
+media
+.vagrant
