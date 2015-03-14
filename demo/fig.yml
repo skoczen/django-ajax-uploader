@@ -1,0 +1,10 @@
+db:
+  image: postgres 
+web:
+  build: .
+  links:
+    - db
+  ports:
+    - "8888:8080"
+  volumes:
+    - .:/app
