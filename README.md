@@ -97,7 +97,7 @@ This sample is included in the templates directory, but at the minimum, you need
         <script>
             $(function(){
             var uploader = new qq.FileUploader({
-                action: "{% url my_ajax_upload %}",
+                action: "{% url 'my_ajax_upload' %}",
                 element: $('#file-uploader')[0],
                 multiple: true,
                 onComplete: function(id, fileName, responseJSON) {
