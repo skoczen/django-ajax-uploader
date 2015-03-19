@@ -1,4 +1,4 @@
 Django==1.7.1
 psycopg2
 boto
-django-ajax-uploader==0.4.0
+ajaxuploader==0.3.8
