@@ -4,6 +4,8 @@ from django.conf import settings
 
 admin.autodiscover()
 
+from local import views
+
 urlpatterns = patterns('',
     # Examples:
     # url(r'^blog/', include('blog.urls')),
@@ -12,6 +14,7 @@ urlpatterns = patterns('',
     #url(r'^s3direct/', include('local.urls')),
     url(r'^local/', include('local.urls')),
 
+    url(r'ajax-upload$', views.local_uploader, name="my_ajax_upload"),
 
     url(r'^admin/', include(admin.site.urls)),
 )

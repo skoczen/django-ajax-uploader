@@ -130,9 +130,9 @@ INSTALLED_APPS = (
 
     'django.contrib.admin',
     'ajaxuploader',
-    #'s3direct',
-    #'s3',
+    's3',
     'local',
+    's3direct',
 )
 
 EMAIL_SUBJECT_PREFIX = '[subject] '
@@ -168,24 +168,33 @@ LOGGING = {
 
 # Amazon variables. Be wary and don't hard-code your secret keys here. Rather,
 # set them as environment variables, or read them from a file somehow.
-AWS_UPLOAD_CLIENT_KEY = os.getenv("AWS_UPLOAD_CLIENT_KEY")
-AWS_UPLOAD_CLIENT_SECRET_KEY = os.getenv("AWS_UPLOAD_CLIENT_SECRET_KEY")
+AWS_ACCESS_KEY_ID = os.getenv("AWS_UPLOAD_CLIENT_KEY")
+AWS_SECRET_ACCESS_KEY = os.getenv("AWS_UPLOAD_CLIENT_SECRET_KEY")
 
-AWS_EXPECTED_BUCKET   = os.getenv("AWS_EXPECTED_BUCKET")
+AWS_BUCKET_NAME   = os.getenv("AWS_EXPECTED_BUCKET")
 AWS_MAX_SIZE          = os.getenv("AWS_MAX_SIZE")
 
 DATABASES = {
     'default': {
-        # Using sqlite3 (easier if you dont have docker / fig running)
-        #'ENGINE': 'django.db.backends.sqlite3',
-        #'NAME': os.path.join(PROJECT_ROOT, "db.sqlite3"),
 
-        # psycopg2 config (works w/ docker + fig)
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        ###### generic config ######
+        'HOST': '',
+        'PORT': 5432,
         'NAME': 'flexdb',
+
+        ###### sqlite3 config ######
+        #'ENGINE': 'django.db.backends.sqlite3',
+
+        ###### Vagrant Box config #####
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'USER': 'postgres',
         'PASSWORD': 'test',
         'HOST': '',
-        'PORT': 5432
+
+        ###### docker config ######
+        #'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        #'NAME': 'postgres'
+        #'USER': 'postgres',
+        #'HOST': 'db',
     }
 }

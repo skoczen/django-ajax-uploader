@@ -9,4 +9,4 @@ def local(request):
     return render_to_response('local/upload.html',
         {'csrf_token': csrf_token}, context_instance = RequestContext(request))
 
-import_uploader = AjaxFileUploader()
+local_uploader = AjaxFileUploader()
