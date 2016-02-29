@@ -3,7 +3,6 @@ try:
 except ImportError:
     from django.utils import simplejson as json
 
-from django.core.files.base import File
 from django.core.serializers.json import DjangoJSONEncoder
 
 from django.http import HttpResponse, HttpResponseBadRequest, Http404, HttpResponseNotAllowed
@@ -13,7 +12,11 @@ from ajaxuploader.signals import file_uploaded
 
 
 class AjaxFileUploader(object):
-    def __init__(self, backend=None, **kwargs):
+    use_signal = True
+
+    def __init__(self, backend=None, use_signal=None, **kwargs):
+        if isinstance(use_signal, bool):
+            self.use_signal = use_signal
         if backend is None:
             backend = LocalUploadBackend
         self.get_backend = lambda: backend(**kwargs)
@@ -63,7 +66,10 @@ class AjaxFileUploader(object):
             success = backend.upload(upload, filename, is_raw, *args, **kwargs)
 
             if success:
-                file_uploaded.send(sender=self.__class__, backend=backend, request=request)
+                if self.use_signal:
+                    file_uploaded.send(sender=self.__class__, backend=backend, request=request)
+                else:
+                    self.upload_success(backend, request)
 
             # callback
             extra_context = backend.upload_complete(request, filename, *args, **kwargs)
@@ -79,3 +85,13 @@ class AjaxFileUploader(object):
             response = HttpResponseNotAllowed(['POST'])
             response.write("ERROR: Only POST allowed")
             return response
+
+    def upload_success(self, backend, request):
+        """
+        The child class define this method when use_signal equal to False.
+        This method is called when the file upload ends.
+        Args:
+            backend:
+            request:
+        """
+        pass
