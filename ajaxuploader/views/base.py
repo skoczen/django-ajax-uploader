@@ -32,6 +32,8 @@ class AjaxFileUploader(object):
                 try:
                     if 'qqfile' in request.GET:
                         filename = request.GET['qqfile']
+                    elif 'qqfilename' in request.POST:
+                        filename = request.POST['qqfilename']
                     else:
                         filename = request.REQUEST['qqfilename']
                 except KeyError:
