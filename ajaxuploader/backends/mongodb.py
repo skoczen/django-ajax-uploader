@@ -2,7 +2,7 @@ import mimetypes
 
 from django.conf import settings
 
-from pymongo import Connection
+from pymongo import MongoClient
 import gridfs
 
 from ajaxuploader.backends.base import AbstractUploadBackend
@@ -44,7 +44,7 @@ class MongoDBUploadBackend(AbstractUploadBackend):
                 Backwards compatibility for old version.
                 """
                 host = u"%s:%d" % (host, port)
-        self.connection = Connection(host, replicaset=replicaset)[self.db]
+        self.connection = MongoClient(host, replicaset=replicaset)[self.db]
 
         if self.collection:
             self.grid = gridfs.GridFS(self.connection,
