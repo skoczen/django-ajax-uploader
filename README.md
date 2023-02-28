@@ -36,7 +36,7 @@ It's in pypi now, so simply:
 You may also need to install backend-specific dependences. 
 
  - For the S3 backend or direct S3 uploads, you will need [boto](https://github.com/boto/boto).  ( `pip install boto` )
- - For the MongoDB GridFS backend, you will need [pymongo](https://github.com/AloneRoad/pymongo) ( `pip install pymongo` )
+ - For the MongoDB GridFS backend, you will need [pymongo 3.13.0](https://github.com/AloneRoad/pymongo) ( `pip install pymongo==3.13.0` )
 
 Step 2. (Django 1.3+)
 -------------------------
