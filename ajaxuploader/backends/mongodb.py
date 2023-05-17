@@ -35,16 +35,20 @@ class MongoDBUploadBackend(AbstractUploadBackend):
         host = getattr(settings, "AJAXUPLOAD_MONGODB_HOST", "localhost:27017")
         port = getattr(settings, "AJAXUPLOAD_MONGODB_PORT", 27017)
         replicaset = getattr(settings, "AJAXUPLOAD_MONGODB_REPLICASET", "")
+        mongo_uri = getattr(settings, "MONGO_URI", "")
 
-        if isinstance(host, list):
-            host = ", ".join(host)
+        if mongo_uri:
+            self.connection = MongoClient(mongo_uri)[self.db]
         else:
-            if not ":" in host:
-                """
-                Backwards compatibility for old version.
-                """
-                host = u"%s:%d" % (host, port)
-        self.connection = MongoClient(host, replicaset=replicaset)[self.db]
+            if isinstance(host, list):
+                host = ", ".join(host)
+            else:
+                if not ":" in host:
+                    """
+                    Backwards compatibility for old version.
+                    """
+                    host = u"%s:%d" % (host, port)
+            self.connection = MongoClient(host, replicaset=replicaset)[self.db]
 
         if self.collection:
             self.grid = gridfs.GridFS(self.connection,
