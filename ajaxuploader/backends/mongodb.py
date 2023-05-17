@@ -35,7 +35,7 @@ class MongoDBUploadBackend(AbstractUploadBackend):
         host = getattr(settings, "AJAXUPLOAD_MONGODB_HOST", "localhost:27017")
         port = getattr(settings, "AJAXUPLOAD_MONGODB_PORT", 27017)
         replicaset = getattr(settings, "AJAXUPLOAD_MONGODB_REPLICASET", "")
-        mongo_uri = getattr(settings, "MONGO_URI", "")
+        mongo_uri = getattr(settings, "AJAXUPLOAD_MONGO_URI", "")
 
         if mongo_uri:
             self.connection = MongoClient(mongo_uri)[self.db]
