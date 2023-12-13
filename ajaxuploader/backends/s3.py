@@ -1,5 +1,5 @@
 from multiprocessing import Pool
-from StringIO import StringIO
+from io import StringIO
 
 import boto
 from django.conf import settings
